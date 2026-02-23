@@ -26,6 +26,7 @@ jobs:
       - name: Build and push the docker images
         env:
           COMMIT_SHA: ${{ github.sha }}
+          BACKEND_REPLICAS_COUNT: ${{ secrets.BACKEND_REPLICAS_COUNT }}
         run: docker compose -f swarm-config.yml build --push
 
       - name: Deploy to production step
