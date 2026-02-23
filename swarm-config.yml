@@ -93,7 +93,6 @@ services:
 # -----------------------------------------------------
 # Monitoring
 
-services:
   agent:
     image: portainer/agent:lts
     volumes:
