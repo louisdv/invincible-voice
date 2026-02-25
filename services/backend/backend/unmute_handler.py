@@ -1,6 +1,5 @@
 import asyncio
 import datetime as dt
-import math
 import uuid
 from logging import getLogger
 from typing import Any, Literal, cast
@@ -20,9 +19,7 @@ from pydantic import BaseModel
 import backend.openai_realtime_api_events as ora
 from backend import metrics as mt
 from backend.kyutai_constants import (
-    FRAME_TIME_SEC,
     SAMPLE_RATE,
-    SAMPLES_PER_FRAME,
 )
 from backend.llm.chatbot import Chatbot
 from backend.llm.llm_utils import (
@@ -64,6 +61,10 @@ class ErrorFromTTS(Exception):
     pass
 
 
+class ChatbotStateChanged(Exception):
+    pass
+
+
 class GradioUpdate(BaseModel):
     chat_history: list[dict[str, str]]
     debug_dict: dict[str, Any]
@@ -87,7 +88,6 @@ class UnmuteHandler(AsyncStreamHandler):
 
         self.stt_last_message_time: float = 0
         self.stt_end_of_flush_time: float | None = None
-        self.stt_flush_timer = Stopwatch()
 
         self.tts_voice: str | None = None  # Stored separately because TTS is restarted
         if isinstance(user_email_or_data, str):
@@ -96,6 +96,7 @@ class UnmuteHandler(AsyncStreamHandler):
             user_data = user_email_or_data
 
         self.chatbot = Chatbot(user_data, start_time=local_time)
+        self.last_llm_call_chatbot_proxy_hash = None
         self.openai_client = get_openai_client()
 
         self.turn_transition_lock = asyncio.Lock()
@@ -124,9 +125,6 @@ class UnmuteHandler(AsyncStreamHandler):
         self.debug_dict["connection"]["stt"] = self.stt.state() if self.stt else "none"
         self.debug_dict["connection"]["tts"] = "none"
         self.debug_dict["tts_voice"] = self.tts_voice or "none"
-        self.debug_dict["stt_pause_prediction"] = (
-            self.stt.pause_prediction.value if self.stt else -1
-        )
 
         return AdditionalOutputs(
             GradioUpdate(
@@ -162,24 +160,29 @@ class UnmuteHandler(AsyncStreamHandler):
     async def set_desired_responses_length(
         self, message: ora.DesiredResponsesLenght
     ) -> None:
-        must_generate_response = self.chatbot.desired_responses_length != message.length
         self.chatbot.desired_responses_length = message.length
         logger.info("Desired responses length set to %s", message.length)
-        if must_generate_response:
-            # If there was a generated response before, it likely didn't have the keywords
-            await self._generate_response()
+        await self._generate_response()
 
     async def select_response(self, message_content: str, id_: uuid.UUID):
         self.chatbot.select_response(message_content, id_)
         await self._generate_response()
 
-    async def _generate_response(self):
+    async def _generate_response(self) -> bool:
+        current_chatbot_proxy_hash = self.chatbot.proxy_hash()
+        if self.last_llm_call_chatbot_proxy_hash == current_chatbot_proxy_hash:
+            # Actually we've already started generating a response for this
+            # chatbot state, we can skip it for now.
+            return False
+        self.last_llm_call_chatbot_proxy_hash = current_chatbot_proxy_hash
+
         # Empty message to signal we've started responding.
         # Do it here in the lock to avoid race conditions
         quest = Quest.from_run_step(
             "llm" + str(dt.datetime.now()), self._generate_response_task
         )
         await self.quest_manager.add(quest)
+        return True
 
     async def _generate_response_task(self):
         # Create timestamp at the start of response generation
@@ -211,6 +214,9 @@ class UnmuteHandler(AsyncStreamHandler):
         )
 
         messages = self.chatbot.preprocessed_messages()
+        # we copy the last messages to know if we need to abort in case of a new
+        # word coming
+        start_chatbot_proxy_hash = self.chatbot.proxy_hash()
 
         all_words = []
         error_from_tts = False
@@ -227,6 +233,12 @@ class UnmuteHandler(AsyncStreamHandler):
         logger.info("starting VLLM")
         try:
             async for delta in llm.chat_completion(messages):
+                current_chatbot_proxy_hash = self.chatbot.proxy_hash()
+                if start_chatbot_proxy_hash != current_chatbot_proxy_hash:
+                    # The state of the chat has changed, let's abort and wait
+                    # for the next llm session to start with the updated state.
+                    # This will avoid having the suggestions update too quickly.
+                    raise ChatbotStateChanged()
                 if not all_words:
                     # Logging time to first word
                     logger.info(
@@ -271,6 +283,9 @@ class UnmuteHandler(AsyncStreamHandler):
         except asyncio.CancelledError:
             mt.VLLM_INTERRUPTS.inc()
             raise
+        except ChatbotStateChanged:
+            logger.info("Chatbot state changed, aborting llm quest.")
+            pass
         except Exception as e:
             if not error_from_tts:
                 mt.VLLM_HARD_ERRORS.inc()
@@ -316,7 +331,6 @@ class UnmuteHandler(AsyncStreamHandler):
             {
                 "t": self.audio_received_sec(),
                 "amplitude": float(np.sqrt((float_audio**2).mean())),
-                "pause_prediction": stt.pause_prediction.value,
             }
         )
 
@@ -328,66 +342,32 @@ class UnmuteHandler(AsyncStreamHandler):
             self.debug_dict["timing"] = {}
 
         await stt.send_audio(array)
-        if self.stt_end_of_flush_time is None:
-            if self.determine_pause():
-                logger.info("Pause detected")
+        if self.determine_pause():
+            started_generating_response = await self._generate_response()
+            if started_generating_response:
                 await self.output_queue.put(ora.InputAudioBufferSpeechStopped())
-
-                self.stt_end_of_flush_time = stt.current_time + stt.delay_sec
-                self.stt_flush_timer = Stopwatch()
-                num_frames = (
-                    int(math.ceil(stt.delay_sec / FRAME_TIME_SEC)) + 1
-                )  # some safety margin.
-                zero = np.zeros(SAMPLES_PER_FRAME, dtype=np.float32)
-                for _ in range(num_frames):
-                    await stt.send_audio(zero)
-        else:
-            # We do not try to detect interruption here, the STT would be processing
-            # a chunk full of 0, so there is little chance the pause score would indicate an interruption.
-            if stt.current_time > self.stt_end_of_flush_time:
-                logger.info(
-                    f"After the flush time, of {stt.current_time - self.stt_end_of_flush_time:.2f} sec"
-                )
-                self.stt_end_of_flush_time = None
-                elapsed = self.stt_flush_timer.time()
-                rtf = stt.delay_sec / elapsed
-                logger.info(
-                    "Flushing finished, took %.1f ms, RTF: %.1f", elapsed * 1000, rtf
-                )
-                await self._generate_response()
 
     def determine_pause(self) -> bool:
         stt = self.stt
         if stt is None:
             logger.info("No STT instance, not determining pause.")
             return False
-        if self.chatbot.conversation_state() != "user_speaking":
-            return False
 
         # This is how much wall clock time has passed since we received the last ASR
         # message. Assumes the ASR connection is healthy, so that stt.sent_samples is up
         # to date.
+        if self.stt_last_message_time == 0:
+            # We consider that the silence at the start is not a pause.
+            return False
         time_since_last_message = (
             stt.sent_samples / self.input_sample_rate
         ) - self.stt_last_message_time
         self.debug_dict["time_since_last_message"] = time_since_last_message
 
-        if time_since_last_message > 2.5:
+        if time_since_last_message > 1.7:
             return True
 
-        if stt.pause_prediction.value > 0.6:
-            self.debug_dict["timing"]["pause_detection"] = time_since_last_message
-            logger.info(
-                f"Pause detected, pause_prediction: {stt.pause_prediction.value:.2f} time since last message: {time_since_last_message:.2f} sec"
-            )
-            return True
-        else:
-            logger.info(
-                "No pause here, pause_prediction: %.2f, time since last message:"
-                + str(time_since_last_message),
-                stt.pause_prediction.value,
-            )
-            return False
+        return False
 
     async def emit(  # pyright: ignore[reportIncompatibleMethodOverride]
         self,
@@ -467,7 +447,6 @@ class UnmuteHandler(AsyncStreamHandler):
                 if is_new_message:
                     # Ensure we don't stop after the first word if the VAD didn't have
                     # time to react.
-                    stt.pause_prediction.value = 0.0
                     await self.output_queue.put(ora.InputAudioBufferSpeechStarted())
         except websockets.ConnectionClosed:
             logger.info("STT connection closed while receiving messages.")
