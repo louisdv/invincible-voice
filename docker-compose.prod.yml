@@ -1,0 +1,86 @@
+services:
+
+  traefik:
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "letsencrypt:/letsencrypt"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: services/frontend/
+      dockerfile: Dockerfile
+    volumes: []
+    labels:
+      - "traefik.enable=true"
+      - "pub_port=80"
+      - "traefik.http.routers.frontend.rule=Host(`${DOMAIN}`) && PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+      - "traefik.http.routers.frontend.priority=10"
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: services/backend
+      target: prod
+    volumes:
+      - users_data:/users_data
+    environment:
+      - CORS_ALLOW_ORIGINS=https://${DOMAIN}
+    labels:
+      - "traefik.enable=true"
+      - "pub_port=80"
+      - "traefik.http.routers.backend.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.middlewares=strip-api"
+      - "traefik.http.middlewares.strip-api.replacepathregex.regex=^/api/(.*)"
+      - "traefik.http.middlewares.strip-api.replacepathregex.replacement=/$$1"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls=true"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend.loadbalancer.server.port=80"
+      - "traefik.http.routers.backend.priority=100"
+      - "traefik.http.routers.block-metrics.rule=Host(`${DOMAIN}`) && Path(`/api/metrics`)"
+      - "traefik.http.routers.block-metrics.priority=300"
+      - "traefik.http.routers.block-metrics.service=noop@internal"
+      - "traefik.http.routers.block-metrics.entrypoints=websecure"
+    restart: unless-stopped
+
+  redis:
+    restart: unless-stopped
+
+  prometheus:
+    restart: unless-stopped
+
+  grafana:
+    labels:
+      - "traefik.enable=true"
+      - "pub_port=80"
+      - "traefik.http.routers.grafana.rule=Host(`${DOMAIN}`) && PathPrefix(`/grafana`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.grafana.middlewares=grafana-strip"
+      - "traefik.http.middlewares.grafana-strip.stripprefix.prefixes=/grafana"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+    restart: unless-stopped
+
+volumes:
+  letsencrypt:
+  users_data:

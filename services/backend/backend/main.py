@@ -1,4 +1,5 @@
 import logging
+import os
 from contextlib import asynccontextmanager
 from typing import Annotated
 
@@ -59,7 +60,9 @@ app = FastAPI(openapi_prefix="/api", lifespan=lifespan)
 Instrumentator().instrument(app).expose(app)
 
 # Allow CORS for local development
-CORS_ALLOW_ORIGINS = ["http://localhost", "http://localhost:3000"]
+CORS_ALLOW_ORIGINS = os.environ.get(
+    "CORS_ALLOW_ORIGINS", "http://localhost,http://localhost:3000"
+).split(",")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ALLOW_ORIGINS,

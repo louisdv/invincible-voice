@@ -45,7 +45,6 @@ services:
 
   backend:
     image: invincible-voice-backend:latest
-    platform: linux/amd64
     build:
       context: services/backend
       target: hot-reloading
