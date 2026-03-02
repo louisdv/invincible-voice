@@ -4,8 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from typing_extensions import Annotated
 
-from backend.kyutai_constants import ALLOW_PASSWORD, GOOGLE_CLIENT_ID
-from backend.libs.google import verify_google_token
+from backend.kyutai_constants import ALLOW_PASSWORD
 from backend.security import create_access_token, hash_password, verify_password
 from backend.storage import (
     UserData,
@@ -13,7 +12,7 @@ from backend.storage import (
     get_user_data_from_storage,
     get_user_data_path,
 )
-from backend.typing import GoogleAuthRequest, UserSettings
+from backend.typing import UserSettings
 
 auth_router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -45,7 +44,6 @@ def get_new_user(
     email: str,
     language: str,
     hashed_password: str = "",
-    google_sub: str | None = None,
 ) -> UserData:
     # Default name and keywords based on language
     default_names = {
@@ -127,7 +125,6 @@ def get_new_user(
     return UserData(
         user_id=uuid.uuid4(),
         email=email,
-        google_sub=google_sub,
         hashed_password=hashed_password,
         user_settings=UserSettings(
             name=default_names[language],
@@ -167,36 +164,8 @@ def register(
     }
 
 
-@auth_router.post("/google")
-def google_login(data: GoogleAuthRequest):
-    google_user = verify_google_token(data.token)
-
-    email = google_user["email"]
-
-    try:
-        user = get_user_data_from_storage(email)
-        if user.google_sub is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Account exists, login with password",
-            )
-    except UserDataNotFoundError:
-        user = get_new_user(email, data.language, google_sub=google_user["sub"])
-        user.save()
-
-    jwt_token = create_access_token({"sub": user.email})
-
-    return {
-        "access_token": jwt_token,
-        "token_type": "bearer",
-    }
-
-
 @auth_router.get("/allow-password")
 def allow_password() -> dict[str, bool]:
     return {"allow_password": ALLOW_PASSWORD}
 
 
-@auth_router.get("/google-client-id")
-def google_client_id() -> dict[str, str]:
-    return {"google_client_id": GOOGLE_CLIENT_ID}

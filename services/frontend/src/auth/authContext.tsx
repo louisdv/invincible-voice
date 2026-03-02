@@ -1,4 +1,3 @@
-import { useRouter } from 'next/navigation';
 import {
   FC,
   PropsWithChildren,
@@ -27,11 +26,9 @@ interface AuthContextInterface {
   authStatus: AuthStatus;
   authError: boolean;
   allowPassword: boolean;
-  googleClientId: string;
   userData: UserData | null;
   register: (email: string, password: string) => void;
   signIn: (email: string, password: string) => void;
-  googleSignIn: (googleToken: string) => void;
   signOut: () => void;
   acceptTermsOfServices: () => Promise<void>;
   fetchUserData: () => Promise<void>;
@@ -41,11 +38,9 @@ export const AuthContext = createContext<AuthContextInterface>({
   authStatus: AUTH_STATUSES.NOT_CHECKED,
   authError: false,
   allowPassword: true,
-  googleClientId: '',
   userData: null,
   register: () => {},
   signIn: () => {},
-  googleSignIn: () => {},
   signOut: () => {},
   acceptTermsOfServices: async () => {},
   fetchUserData: async () => {},
@@ -59,9 +54,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children = null }) => {
     AUTH_STATUSES.NOT_CHECKED,
   );
   const [allowPassword, setAllowPassword] = useState<boolean>(true);
-  const [googleClientId, setGoogleClientId] = useState<string>('');
   const [userData, setUserData] = useState<UserData | null>(null);
-  const router = useRouter();
   const locale = useLocale();
 
   const fetchUserData = useCallback(async () => {
@@ -136,33 +129,6 @@ const AuthProvider: FC<PropsWithChildren> = ({ children = null }) => {
     },
     [fetchUserData],
   );
-  const googleSignIn = useCallback(
-    async (googleToken: string) => {
-      try {
-        setAuthError(false);
-        const response = await fetch('/api/auth/google', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ token: googleToken, language: locale }),
-        });
-        if (response.ok) {
-          const data = await response.json();
-          new Cookies().set('bearerToken', data.access_token, { path: '/' });
-          setAuthStatus(AUTH_STATUSES.LOGGED);
-          await fetchUserData();
-        } else {
-          setAuthError(true);
-        }
-      } catch {
-        setAuthError(true);
-      } finally {
-        router.replace('/');
-      }
-    },
-    [router, locale, fetchUserData],
-  );
   const register = useCallback(
     async (email: string, password: string) => {
       try {
@@ -188,10 +154,8 @@ const AuthProvider: FC<PropsWithChildren> = ({ children = null }) => {
       authStatus,
       authError,
       allowPassword,
-      googleClientId,
       userData,
       signIn,
-      googleSignIn,
       signOut,
       register,
       acceptTermsOfServices,
@@ -201,10 +165,8 @@ const AuthProvider: FC<PropsWithChildren> = ({ children = null }) => {
       authStatus,
       authError,
       allowPassword,
-      googleClientId,
       userData,
       signIn,
-      googleSignIn,
       signOut,
       register,
       acceptTermsOfServices,
@@ -257,22 +219,6 @@ const AuthProvider: FC<PropsWithChildren> = ({ children = null }) => {
     }
 
     checkAllowPassword();
-  }, []);
-
-  useEffect(() => {
-    async function fetchGoogleClientId() {
-      try {
-        const response = await fetch('/api/auth/google-client-id');
-        if (response.ok) {
-          const data = await response.json();
-          setGoogleClientId(data.google_client_id);
-        }
-      } catch {
-        setGoogleClientId('');
-      }
-    }
-
-    fetchGoogleClientId();
   }, []);
 
   return (

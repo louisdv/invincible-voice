@@ -11,7 +11,6 @@ import React, {
 } from 'react';
 import TermsOfServiceModal from '@/components/TermsOfServiceModal';
 import { useTranslations } from '@/i18n';
-import Google from './Google';
 import { AUTH_STATUSES, useAuthContext } from './authContext';
 
 const AuthWrapper: FC<PropsWithChildren> = ({ children = null }) => {
@@ -188,10 +187,8 @@ const SignInScreen: FC<SignInScreenProps> = ({
                 {t('common.signIn')}
               </div>
             </button>
-            <p className='font-bold text-sm text-center'>{t('common.or')}</p>
           </React.Fragment>
         )}
-        <Google />
       </form>
       <div className='flex flex-col gap-2 w-full bg-[#101010] px-11 py-9 rounded-4xl font-bold'>
         <p className='mb-4 font-bold text-sm text-center'>
@@ -352,10 +349,8 @@ const RegisterScreen: FC<RegisterScreenProps> = ({
                 {t('common.signUp')}
               </span>
             </button>
-            <p className='font-bold text-sm text-center'>{t('common.or')}</p>
           </React.Fragment>
         )}
-        <Google />
       </form>
       <div className='flex flex-col gap-2 w-full bg-[#101010] px-11 py-9 rounded-4xl font-bold'>
         <p className='mb-4 font-bold text-sm text-center'>

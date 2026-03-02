@@ -27,7 +27,6 @@ class UserData(pydantic.BaseModel):
     user_id: uuid.UUID
     email: str
     hashed_password: str
-    google_sub: str | None
 
     user_settings: UserSettings
     conversations: list[Conversation]

@@ -42,11 +42,6 @@ class UserSettings(pydantic.BaseModel):
     accepted_terms_of_services: bool = False
 
 
-class GoogleAuthRequest(pydantic.BaseModel):
-    token: str
-    language: str
-
-
 class HealthStatus(pydantic.BaseModel):
     stt_up: bool
     llm_up: bool
