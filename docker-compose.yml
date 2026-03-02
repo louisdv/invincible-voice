@@ -81,6 +81,10 @@ services:
       - "traefik.http.routers.backend.entrypoints=web"
       - "traefik.http.services.backend.loadbalancer.server.port=80"
       - "traefik.http.routers.backend.priority=100" # higher priority than frontend
+      - "traefik.http.routers.block-metrics.rule=Path(`/api/metrics`)"
+      - "traefik.http.routers.block-metrics.priority=300"
+      - "traefik.http.routers.block-metrics.service=noop@internal"
+      - "traefik.http.routers.block-metrics.entrypoints=web"
 
   redis:
     image: redis:8-alpine
@@ -88,6 +92,37 @@ services:
       - "6379:6379"
     labels:
       - "traefik.enable=false"
+
+  prometheus:
+    image: invincible-voice-prometheus:latest
+    build:
+      context: services/prometheus
+      args:
+        CONFIG_FILE: prometheus-local.yml
+    volumes:
+      - ./volumes/prometheus-data:/prometheus
+    labels:
+      - "traefik.enable=false"
+
+  grafana:
+    image: invincible-voice-grafana:latest
+    build:
+      context: services/grafana
+    volumes:
+      - ./volumes/grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-kyutai}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-kyutai-password}
+      - GF_INSTALL_PLUGINS=
+      - GF_SERVER_ROOT_URL=/grafana
+    labels:
+      - "traefik.enable=true"
+      - "pub_port=80"
+      - "traefik.http.routers.grafana.rule=PathPrefix(`/grafana`)"
+      - "traefik.http.routers.grafana.entrypoints=web"
+      - "traefik.http.routers.grafana.middlewares=grafana-strip"
+      - "traefik.http.middlewares.grafana-strip.stripprefix.prefixes=/grafana"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
 
 networks:
   default:
