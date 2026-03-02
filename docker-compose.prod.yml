@@ -66,9 +66,13 @@ services:
     restart: unless-stopped
 
   prometheus:
+    volumes:
+      - prometheus_data:/prometheus
     restart: unless-stopped
 
   grafana:
+    volumes:
+      - grafana_data:/var/lib/grafana
     labels:
       - "traefik.enable=true"
       - "pub_port=80"
@@ -84,3 +88,5 @@ services:
 volumes:
   letsencrypt:
   users_data:
+  prometheus_data:
+  grafana_data:
