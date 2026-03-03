@@ -23,7 +23,7 @@ from backend.kyutai_constants import (
     STT_IS_GRADIUM,
 )
 from backend.timer import Stopwatch
-from backend.websocket_utils import WebsocketState
+from backend.websocket_utils import WebsocketState, http_to_ws
 
 logger = getLogger(__name__)
 
@@ -151,7 +151,7 @@ GradiumSTTMessageAdapter = TypeAdapter(GradiumSTTMessage)
 
 class SpeechToText:
     def __init__(self, expected_language: str | None):
-        self.stt_instance = KYUTAI_STT_URL
+        self.stt_instance = http_to_ws(KYUTAI_STT_URL)
         self.delay_sec = STT_DELAY_SEC
         self.websocket: websockets.ClientConnection | None = None
         self.sent_samples = 0
