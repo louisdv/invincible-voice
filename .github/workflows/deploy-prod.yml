@@ -1,54 +1,24 @@
-name: Deploy to prod workflow
+name: Deploy to prod
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: Deploy to prod
+    environment: production
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Login with Docker
-        run: echo ${{ secrets.SCW_SECRET_KEY_REGISTRY }} | docker login rg.fr-par.scw.cloud/namespace-unruffled-tereshkova -u nologin --password-stdin
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY_DEPLOYMENT }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan invincible-voice.kyutai.org >> ~/.ssh/known_hosts
-          ssh ${{ secrets.DEPLOYMENT_USER }}@invincible-voice.kyutai.org "echo SSH connection established"
-
-      - name: Build and push the docker images
-        env:
-          COMMIT_SHA: ${{ github.sha }}
-          BACKEND_REPLICAS_COUNT: ${{ secrets.BACKEND_REPLICAS_COUNT }}
-        run: docker compose -f swarm-config.yml build --push
-
-      - name: Deploy to production step
-        env:
-          COMMIT_SHA: ${{ github.sha }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_ENDPOINT_URL: ${{ secrets.AWS_ENDPOINT_URL }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          GRAFANA_ADMIN_USER: ${{ secrets.GRAFANA_ADMIN_USER }}
-          GRAFANA_ADMIN_PASSWORD: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
-          GRADIUM_API_KEY: ${{ secrets.GRADIUM_API_KEY }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-          KYUTAI_LLM_API_KEY: ${{ secrets.KYUTAI_LLM_API_KEY }}
-          TTS_VOICE_ID: ${{ secrets.TTS_VOICE_ID }}
-          BACKEND_REPLICAS_COUNT: ${{ secrets.BACKEND_REPLICAS_COUNT }}
-        run: |
-          docker -H ssh://${{ secrets.DEPLOYMENT_USER }}@invincible-voice.kyutai.org stack deploy \
-            -c swarm-config.yml \
-            --with-registry-auth \
-            --prune \
-            --detach=true \
-            invincible-voice
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ vars.SERVER_HOST }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/invincible-voice
+            git pull origin main
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+            docker image prune -f
