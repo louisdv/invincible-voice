@@ -8,7 +8,6 @@ from backend.kyutai_constants import ALLOW_PASSWORD
 from backend.security import create_access_token, hash_password, verify_password
 from backend.storage import (
     UserData,
-    UserDataNotFoundError,
     get_user_data_from_storage,
     get_user_data_path,
 )
@@ -167,5 +166,3 @@ def register(
 @auth_router.get("/allow-password")
 def allow_password() -> dict[str, bool]:
     return {"allow_password": ALLOW_PASSWORD}
-
-
