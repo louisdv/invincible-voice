@@ -20,5 +20,5 @@ jobs:
           script: |
             cd /opt/invincible-voice
             git pull origin main
-            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+            docker compose --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml up -d --build
             docker image prune -f
