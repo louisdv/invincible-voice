@@ -242,10 +242,23 @@ class SpeechToText:
                 )
 
             headers = {"x-api-key": api_key}
-            self.websocket = await websockets.connect(
-                self.stt_instance,
-                additional_headers=headers,
-            )
+            try:
+                self.websocket = await websockets.connect(
+                    self.stt_instance,
+                    additional_headers=headers,
+                )
+            except websockets.exceptions.InvalidURI as e:
+                # Gradium redirects with https:// scheme instead of wss://
+                redirect_url = str(e).split("'")[1] if "'" in str(e) else None
+                if redirect_url:
+                    self.stt_instance = http_to_ws(redirect_url)
+                    logger.info(f"Retrying with converted redirect URL: {self.stt_instance}")
+                    self.websocket = await websockets.connect(
+                        self.stt_instance,
+                        additional_headers=headers,
+                    )
+                else:
+                    raise
             logger.info("Connected to Gradium STT")
 
             try:
