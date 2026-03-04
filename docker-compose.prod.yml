@@ -63,6 +63,7 @@ services:
     restart: unless-stopped
 
   redis:
+    ports: []
     restart: unless-stopped
 
   prometheus:

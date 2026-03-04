@@ -15,6 +15,7 @@ from backend import metrics as mt
 from backend.kyutai_constants import (
     MAX_VOICE_FILE_SIZE_MB,
     REDIS_HOST,
+    REDIS_PASSWORD,
     REDIS_PORT,
     USERS_SETTINGS_AND_HISTORY_DIR,
 )
@@ -38,7 +39,7 @@ ClientEventAdapter = TypeAdapter(
 
 
 # Background metrics tasks
-redis_metrics_task = RedisMetricsBackgroundTask(REDIS_HOST, REDIS_PORT)
+redis_metrics_task = RedisMetricsBackgroundTask(REDIS_HOST, REDIS_PORT, REDIS_PASSWORD)
 storage_metrics_task = StorageMetricsBackgroundTask(USERS_SETTINGS_AND_HISTORY_DIR)
 
 

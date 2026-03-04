@@ -11,16 +11,21 @@ logger = logging.getLogger(__name__)
 class RedisLockManager:
     """Manages Redis locks for TTS calls on a per-user basis."""
 
-    def __init__(self, host: str, port: int, lock_ttl_seconds: int = 300):
+    def __init__(self, host: str, port: int, lock_ttl_seconds: int = 300, password: str = ""):
         self.host = host
         self.port = port
         self.lock_ttl_seconds = lock_ttl_seconds
+        self.password = password
         self._client: aioredis.Redis | None = None
 
     async def get_client(self) -> aioredis.Redis:
         """Get or create the Redis client."""
         if self._client is None:
-            self._client = await aioredis.from_url(f"redis://{self.host}:{self.port}")
+            if self.password:
+                url = f"redis://:{self.password}@{self.host}:{self.port}"
+            else:
+                url = f"redis://{self.host}:{self.port}"
+            self._client = await aioredis.from_url(url)
         return self._client
 
     async def close(self):
