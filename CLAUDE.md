@@ -68,7 +68,7 @@ uv run uvicorn backend.main:app --reload --port 80
 ## Serveur prod
 
 - **Hetzner CAX11** : 2 vCPU ARM64 (Ampere), 4 GB RAM, €3.29/mois
-- **IP** : 89.167.5.166
+- **IP** : 178.105.76.90
 - **Domaine** : voice.amiral.tech
 - **OS** : Ubuntu 24.04 aarch64
 - **Répertoire** : `/opt/invincible-voice`
