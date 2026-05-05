@@ -28,6 +28,7 @@ KYUTAI_API_KEY = os.environ.get("KYUTAI_API_KEY")
 LLM_API_KEY = os.environ["KYUTAI_LLM_API_KEY"]
 LLM_URL = os.environ["KYUTAI_LLM_URL"]
 LLM_MODEL = os.environ["KYUTAI_LLM_MODEL"]
+LLM_MODEL_FALLBACK = os.environ.get("KYUTAI_LLM_MODEL_FALLBACK") or "cerebras/llama3.1-8b"
 # If None, a dict-based cache will be used instead of Redis
 
 # Redis Configuration for Locking
