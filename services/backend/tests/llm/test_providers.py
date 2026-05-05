@@ -33,8 +33,9 @@ async def test_chat_completion_stream_yields_strings():
 @pytest.mark.asyncio
 async def test_chat_completion_stream_retries_on_rate_limit():
     """The wrapper must retry on RateLimitError before giving up."""
-    from backend.llm.providers import chat_completion_stream
     import litellm
+
+    from backend.llm.providers import chat_completion_stream
 
     fake_chunk = type(
         "Chunk", (), {"choices": [type("C", (), {"delta": type("D", (), {"content": "ok"})()})()]}
@@ -69,8 +70,9 @@ async def test_chat_completion_stream_retries_on_rate_limit():
 @pytest.mark.asyncio
 async def test_chat_completion_stream_falls_back_on_not_found():
     """If the primary model 404s and a fallback is given, retry with fallback."""
-    from backend.llm.providers import chat_completion_stream
     import litellm
+
+    from backend.llm.providers import chat_completion_stream
 
     fake_chunk = type(
         "Chunk", (), {"choices": [type("C", (), {"delta": type("D", (), {"content": "fb"})()})()]}
@@ -100,3 +102,34 @@ async def test_chat_completion_stream_falls_back_on_not_found():
 
     assert result == ["fb"]
     assert seen_models == ["cerebras/qwen-3-235b", "cerebras/llama3.1-8b"]
+
+
+@pytest.mark.asyncio
+async def test_chat_completion_stream_forwards_api_key_and_base():
+    """The wrapper must pass api_key and api_base through to litellm."""
+    from backend.llm.providers import chat_completion_stream
+
+    fake_chunk = type(
+        "Chunk", (), {"choices": [type("C", (), {"delta": type("D", (), {"content": "x"})()})()]}
+    )()
+
+    async def fake_stream():
+        yield fake_chunk
+
+    seen_kwargs: dict = {}
+
+    async def acompletion(**kwargs):
+        seen_kwargs.update(kwargs)
+        return fake_stream()
+
+    with patch("backend.llm.providers.litellm.acompletion", new=acompletion):
+        async for _ in chat_completion_stream(
+            messages=[{"role": "user", "content": "hi"}],
+            model="cerebras/llama3.1-8b",
+            api_key="csk-test-key",
+            api_base="https://api.cerebras.ai/v1",
+        ):
+            pass
+
+    assert seen_kwargs.get("api_key") == "csk-test-key"
+    assert seen_kwargs.get("api_base") == "https://api.cerebras.ai/v1"

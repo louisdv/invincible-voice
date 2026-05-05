@@ -23,6 +23,8 @@ async def chat_completion_stream(
     temperature: float = 1.0,
     response_format: dict[str, Any] | None = None,
     fallback_model: str | None = None,
+    api_key: str | None = None,
+    api_base: str | None = None,
 ) -> AsyncIterator[str]:
     """Yield text chunks from an LLM streaming chat completion.
 
@@ -35,6 +37,10 @@ async def chat_completion_stream(
             and converts to tool-use for Anthropic transparently.
         fallback_model: If set and the primary model fails with a non-retryable
             error (e.g. 404 / model not found), retry once with this model.
+        api_key: Provider API key. Overrides any ``*_API_KEY`` env var lookup
+            LiteLLM would otherwise perform.
+        api_base: Provider base URL. Useful for OpenAI-compatible endpoints
+            (Cerebras, Groq, custom proxies).
 
     Yields:
         Successive text chunks from ``delta.content``.
@@ -47,6 +53,10 @@ async def chat_completion_stream(
     }
     if response_format is not None:
         kwargs["response_format"] = response_format
+    if api_key is not None:
+        kwargs["api_key"] = api_key
+    if api_base is not None:
+        kwargs["api_base"] = api_base
 
     stream = await _acompletion_with_retry(kwargs, fallback_model)
     async for chunk in stream:

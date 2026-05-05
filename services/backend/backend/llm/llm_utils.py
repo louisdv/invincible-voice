@@ -40,5 +40,7 @@ class VLLMStream:
             temperature=self.temperature,
             response_format=response_format,
             fallback_model=self.fallback_model,
+            api_key=kyutai_constants.LLM_API_KEY,
+            api_base=kyutai_constants.LLM_URL,
         ):
             yield chunk
