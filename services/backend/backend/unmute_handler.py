@@ -22,10 +22,7 @@ from backend.kyutai_constants import (
     SAMPLE_RATE,
 )
 from backend.llm.chatbot import Chatbot
-from backend.llm.llm_utils import (
-    VLLMStream,
-    get_openai_client,
-)
+from backend.llm.llm_utils import VLLMStream
 from backend.quest_manager import Quest, QuestManager
 from backend.storage import UserData, get_user_data_from_storage
 from backend.stt.speech_to_text import (
@@ -97,7 +94,6 @@ class UnmuteHandler(AsyncStreamHandler):
 
         self.chatbot = Chatbot(user_data, start_time=local_time)
         self.last_llm_call_chatbot_proxy_hash = None
-        self.openai_client = get_openai_client()
 
         self.turn_transition_lock = asyncio.Lock()
 
@@ -203,9 +199,6 @@ class UnmuteHandler(AsyncStreamHandler):
         llm_stopwatch = Stopwatch()
 
         llm = VLLMStream(
-            # if generating_message_i is 2, then we have a system prompt + an empty
-            # assistant message signalling that we are generating a response.
-            self.openai_client,
             temperature=(
                 FIRST_MESSAGE_TEMPERATURE
                 if generating_message_i == 2
