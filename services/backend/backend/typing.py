@@ -45,6 +45,7 @@ class UserSettings(pydantic.BaseModel):
 class HealthStatus(pydantic.BaseModel):
     stt_up: bool
     llm_up: bool
+    llm_on_fallback: bool = False  # True si le backend tourne sur LLM_MODEL_FALLBACK
 
     @computed_field
     @property
