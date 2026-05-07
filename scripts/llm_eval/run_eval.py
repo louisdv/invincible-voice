@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import datetime as dt
 import json
+import os
 import time
 from pathlib import Path
 from typing import Any
@@ -120,6 +121,7 @@ async def main() -> None:
     user_settings = corpus["user_settings"]
     cases = corpus["cases"]
 
+    # --- Generation phase ---
     for model in MODELS:
         for case in cases:
             messages = build_prompt(user_settings, case)
@@ -145,7 +147,45 @@ async def main() -> None:
     (out_root / "_meta.json").write_text(
         json.dumps({"timestamp": timestamp, "models": MODELS, "runs_per_case": RUNS_PER_CASE}, indent=2)
     )
-    print(f"\nDone. Raw outputs in {out_root}")
+
+    # --- Scoring phase ---
+    from openai import OpenAI
+    from jinja2 import Template
+
+    from score import parse_runs, score_run, aggregate
+
+    case_by_id = {c["id"]: c for c in cases}
+    embedder = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    runs = parse_runs(out_root)
+    scores = [score_run(r, case_by_id[r["case_id"]]["desired_length"], embedder) for r in runs]
+    aggregates = aggregate(scores)
+
+    # First-run sample per (model, case) for the report
+    samples: dict[str, dict[str, Any]] = {}
+    seen: set[tuple[str, str]] = set()
+    for s in scores:
+        key = (s["model"], s["case_id"])
+        if key in seen:
+            continue
+        seen.add(key)
+        samples.setdefault(s["model"], {})[s["case_id"]] = (
+            {"keywords": s.get("keywords", []), "answers": s.get("answers", [])}
+            if s["valid_json"] else None
+        )
+
+    template_text = (here / "report.md.j2").read_text()
+    rendered = Template(template_text).render(
+        timestamp=timestamp,
+        n_cases=len(cases),
+        runs_per_case=RUNS_PER_CASE,
+        models=MODELS,
+        case_ids=[c["id"] for c in cases],
+        aggregates=aggregates,
+        samples=samples,
+    )
+    (out_root / "report.md").write_text(rendered)
+
+    print(f"\nDone. Report at {out_root / 'report.md'}")
 
 
 if __name__ == "__main__":

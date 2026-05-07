@@ -30,3 +30,6 @@ image.png
 CLAUDE.md
 QWEN.md
 .planning/
+
+# LLM eval runs (artefacts locaux, peuvent être lourds)
+scripts/llm_eval/eval_runs/
