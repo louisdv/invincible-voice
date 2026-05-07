@@ -15,17 +15,14 @@ import yaml
 from dotenv import load_dotenv
 from pydantic import BaseModel
 
-load_dotenv(Path(__file__).parent / ".env")
+load_dotenv(Path(__file__).parent / ".env", override=True)
 
 
 MODELS: list[str] = [
     "cerebras/llama3.1-8b",
-    "cerebras/llama-3.3-70b",
     "cerebras/qwen-3-235b-a22b-instruct-2507",
     "openai/gpt-5-mini",
     "anthropic/claude-sonnet-4-6",
-    "groq/llama-3.3-70b-versatile",
-    "gemini/gemini-2.5-flash",
 ]
 
 RUNS_PER_CASE = 5
