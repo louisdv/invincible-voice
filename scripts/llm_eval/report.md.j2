@@ -1,0 +1,32 @@
+# LLM eval report — {{ timestamp }}
+
+**Corpus:** {{ n_cases }} cases × {{ runs_per_case }} runs each
+**Models tested:** {{ models | length }}
+
+## Aggregate scores
+
+| Model | Valid JSON | Mean diversity | Mean length-score | Mean TTFT (ms) | Mean total (ms) |
+|-|-|-|-|-|-|
+{% for model, m in aggregates.items() -%}
+| `{{ model }}` | {{ "%.0f%%" % (m.valid_json_rate * 100) }} | {{ "%.3f" % m.mean_diversity if m.mean_diversity is not none else "—" }} | {{ "%.0f%%" % (m.mean_length_score * 100) if m.mean_length_score is not none else "—" }} | {{ "%.0f" % m.mean_ttft_ms if m.mean_ttft_ms is not none else "—" }} | {{ "%.0f" % m.mean_total_ms if m.mean_total_ms is not none else "—" }} |
+{% endfor %}
+
+> **Diversity** = mean cosine distance over pairs of the 4 suggested answers (higher is more diverse).
+> **Length-score** = fraction of answers whose word count is within the expected range for the case's `desired_length`.
+
+## Per-case sample outputs
+
+{% for case_id in case_ids %}
+### Case `{{ case_id }}`
+
+{% for model in models %}
+**`{{ model }}`** — first run :
+{% set sample = samples[model][case_id] %}
+{% if sample is none %}_invalid run_{% else %}
+- **Keywords:** {{ sample.keywords | join(", ") }}
+- **Answers:**
+{% for a in sample.answers %}  {{ loop.index }}. {{ a }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endfor %}
