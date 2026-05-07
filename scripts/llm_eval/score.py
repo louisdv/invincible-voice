@@ -107,12 +107,14 @@ def aggregate(scores: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     agg: dict[str, dict[str, Any]] = {}
     for model, runs in by_model.items():
         valid = [r for r in runs if r["valid_json"]]
+        ttfts = [r["ttft_ms"] for r in runs if r["ttft_ms"] > 0]
+        totals = [r["total_ms"] for r in runs if r["total_ms"] > 0]
         agg[model] = {
             "n_runs": len(runs),
             "valid_json_rate": len(valid) / len(runs) if runs else 0,
             "mean_diversity": mean(r["diversity"] for r in valid) if valid else None,
             "mean_length_score": mean(r["length_score"] for r in valid) if valid else None,
-            "mean_ttft_ms": mean(r["ttft_ms"] for r in runs if r["ttft_ms"] > 0) if runs else None,
-            "mean_total_ms": mean(r["total_ms"] for r in runs if r["total_ms"] > 0) if runs else None,
+            "mean_ttft_ms": mean(ttfts) if ttfts else None,
+            "mean_total_ms": mean(totals) if totals else None,
         }
     return agg

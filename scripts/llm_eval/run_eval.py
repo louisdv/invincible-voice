@@ -17,6 +17,11 @@ from pydantic import BaseModel
 
 load_dotenv(Path(__file__).parent / ".env", override=True)
 
+# Let LiteLLM transparently adapt JSON schemas (e.g. inject the
+# additionalProperties=false that OpenAI structured outputs require, or
+# convert response_format to tool-use for Anthropic).
+litellm.modify_params = True
+
 
 MODELS: list[str] = [
     "cerebras/llama3.1-8b",
@@ -43,7 +48,12 @@ class StructuredLLMResponse(BaseModel):
 
 
 def build_prompt(user_settings: dict[str, Any], case: dict[str, Any]) -> list[dict[str, str]]:
-    """Replicate (a simplified version of) backend/llm/llm_utils.py prompt building."""
+    """Replicate (a simplified version of) backend/llm/llm_utils.py prompt building.
+
+    Splits into a system message (persona + instructions) and a user message
+    (current conversation + length/hint constraints). Anthropic requires at
+    least one non-system message, hence the split.
+    """
     name = user_settings["name"]
     user_prompt = user_settings["prompt"]
     friends = ", ".join(user_settings["friends"])
@@ -55,44 +65,65 @@ def build_prompt(user_settings: dict[str, Any], case: dict[str, Any]) -> list[di
         "Output JSON: {suggested_keywords: list[str] of length 10, suggested_answers: list[str] of length 4}.\n\n"
         f"## User name\n{name}\n\n"
         f"## User prompt\n{user_prompt}\n\n"
-        f"## User's friends\n{friends}\n\n"
-        "## Current conversation\n"
+        f"## User's friends\n{friends}\n"
     )
+
+    user = "## Current conversation\n"
     for msg in case["history"]:
         if msg["role"] == "speaker":
-            sys += f"* Speaker: {msg['content']}\n"
+            user += f"* Speaker: {msg['content']}\n"
         else:
-            sys += f"* {name} says: {msg['content']}\n"
+            user += f"* {name} says: {msg['content']}\n"
 
-    sys += f"\n## Desired responses length\nEach response between {min_w} and {max_w} words.\n"
+    user += f"\n## Desired responses length\nEach response between {min_w} and {max_w} words.\n"
     if hint:
-        sys += f"\n## User keyword hint\nUse the concept '{hint}' in all responses.\n"
+        user += f"\n## User keyword hint\nUse the concept '{hint}' in all responses.\n"
 
-    return [{"role": "system", "content": sys}]
+    return [
+        {"role": "system", "content": sys},
+        {"role": "user", "content": user},
+    ]
 
 
-async def run_one(model: str, messages: list[dict[str, str]]) -> tuple[str, float, float]:
-    """Return (raw_text, ttft_ms, total_ms)."""
+async def _acompletion_with_retry(model: str, messages: list[dict[str, str]]):
+    """Call litellm.acompletion with rate-limit backoff (1, 2, 4, 8s)."""
+    schema = StructuredLLMResponse.model_json_schema()
+    # OpenAI's strict structured outputs require additionalProperties=false on
+    # every object node. Pydantic doesn't add it by default.
+    schema["additionalProperties"] = False
     response_format = {
         "type": "json_schema",
         "json_schema": {
             "name": "response_suggestion",
             "strict": True,
-            "schema": StructuredLLMResponse.model_json_schema(),
+            "schema": schema,
         },
     }
+    last_exc: Exception | None = None
+    for delay in (1, 2, 4, 8):
+        try:
+            return await litellm.acompletion(
+                model=model,
+                messages=messages,
+                stream=True,
+                temperature=TEMPERATURE,
+                response_format=response_format,
+            )
+        except litellm.RateLimitError as e:
+            last_exc = e
+            await asyncio.sleep(delay)
+    assert last_exc is not None
+    raise last_exc
+
+
+async def run_one(model: str, messages: list[dict[str, str]]) -> tuple[str, float, float]:
+    """Return (raw_text, ttft_ms, total_ms)."""
     t0 = time.perf_counter()
     ttft: float | None = None
     chunks: list[str] = []
 
     try:
-        stream = await litellm.acompletion(
-            model=model,
-            messages=messages,
-            stream=True,
-            temperature=TEMPERATURE,
-            response_format=response_format,
-        )
+        stream = await _acompletion_with_retry(model, messages)
     except Exception as e:
         return f"__ERROR__:{type(e).__name__}: {e}", -1.0, -1.0
 
