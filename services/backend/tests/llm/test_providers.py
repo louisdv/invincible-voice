@@ -11,15 +11,34 @@ async def test_chat_completion_stream_yields_strings():
     from backend.llm.providers import chat_completion_stream
 
     fake_chunks = [
-        type("Chunk", (), {"choices": [type("C", (), {"delta": type("D", (), {"content": "Hel"})()})()]})(),
-        type("Chunk", (), {"choices": [type("C", (), {"delta": type("D", (), {"content": "lo"})()})()]})(),
+        type(
+            "Chunk",
+            (),
+            {
+                "choices": [
+                    type("C", (), {"delta": type("D", (), {"content": "Hel"})()})()
+                ]
+            },
+        )(),
+        type(
+            "Chunk",
+            (),
+            {
+                "choices": [
+                    type("C", (), {"delta": type("D", (), {"content": "lo"})()})()
+                ]
+            },
+        )(),
     ]
 
     async def fake_stream():
         for c in fake_chunks:
             yield c
 
-    with patch("backend.llm.providers.litellm.acompletion", new=AsyncMock(return_value=fake_stream())):
+    with patch(
+        "backend.llm.providers.litellm.acompletion",
+        new=AsyncMock(return_value=fake_stream()),
+    ):
         result = []
         async for piece in chat_completion_stream(
             messages=[{"role": "user", "content": "hi"}],
@@ -38,7 +57,9 @@ async def test_chat_completion_stream_retries_on_rate_limit():
     from backend.llm.providers import chat_completion_stream
 
     fake_chunk = type(
-        "Chunk", (), {"choices": [type("C", (), {"delta": type("D", (), {"content": "ok"})()})()]}
+        "Chunk",
+        (),
+        {"choices": [type("C", (), {"delta": type("D", (), {"content": "ok"})()})()]},
     )()
 
     async def fake_stream():
@@ -49,12 +70,16 @@ async def test_chat_completion_stream_retries_on_rate_limit():
     async def flaky_acompletion(**kwargs):
         call_count["n"] += 1
         if call_count["n"] == 1:
-            raise litellm.RateLimitError("slow down", model="cerebras/llama3.1-8b", llm_provider="cerebras")
+            raise litellm.RateLimitError(
+                "slow down", model="cerebras/llama3.1-8b", llm_provider="cerebras"
+            )
         return fake_stream()
 
     with (
         patch("backend.llm.providers.litellm.acompletion", new=flaky_acompletion),
-        patch("backend.llm.providers.asyncio.sleep", new=AsyncMock()),  # skip real sleep
+        patch(
+            "backend.llm.providers.asyncio.sleep", new=AsyncMock()
+        ),  # skip real sleep
     ):
         result = []
         async for piece in chat_completion_stream(
@@ -75,7 +100,9 @@ async def test_chat_completion_stream_falls_back_on_not_found():
     from backend.llm.providers import chat_completion_stream
 
     fake_chunk = type(
-        "Chunk", (), {"choices": [type("C", (), {"delta": type("D", (), {"content": "fb"})()})()]}
+        "Chunk",
+        (),
+        {"choices": [type("C", (), {"delta": type("D", (), {"content": "fb"})()})()]},
     )()
 
     async def fake_stream():
@@ -110,7 +137,9 @@ async def test_chat_completion_stream_forwards_api_key_and_base():
     from backend.llm.providers import chat_completion_stream
 
     fake_chunk = type(
-        "Chunk", (), {"choices": [type("C", (), {"delta": type("D", (), {"content": "x"})()})()]}
+        "Chunk",
+        (),
+        {"choices": [type("C", (), {"delta": type("D", (), {"content": "x"})()})()]},
     )()
 
     async def fake_stream():
@@ -133,3 +162,69 @@ async def test_chat_completion_stream_forwards_api_key_and_base():
 
     assert seen_kwargs.get("api_key") == "csk-test-key"
     assert seen_kwargs.get("api_base") == "https://api.cerebras.ai/v1"
+
+
+@pytest.mark.asyncio
+async def test_chat_completion_stream_omits_api_base_when_none():
+    """When api_base=None, the kwarg must not appear in the litellm call."""
+    from backend.llm.providers import chat_completion_stream
+
+    fake_chunk = type(
+        "Chunk",
+        (),
+        {"choices": [type("C", (), {"delta": type("D", (), {"content": "x"})()})()]},
+    )()
+
+    async def fake_stream():
+        yield fake_chunk
+
+    seen_kwargs: dict = {}
+
+    async def acompletion(**kwargs):
+        seen_kwargs.update(kwargs)
+        return fake_stream()
+
+    with patch("backend.llm.providers.litellm.acompletion", new=acompletion):
+        async for _ in chat_completion_stream(
+            messages=[{"role": "user", "content": "hi"}],
+            model="anthropic/claude-sonnet-4-6",
+            api_key="sk-ant-test",
+            api_base=None,
+        ):
+            pass
+
+    assert "api_base" not in seen_kwargs
+    assert seen_kwargs.get("api_key") == "sk-ant-test"
+
+
+@pytest.mark.asyncio
+async def test_chat_completion_stream_omits_api_key_when_none():
+    """When api_key=None, the kwarg must not appear in the litellm call."""
+    from backend.llm.providers import chat_completion_stream
+
+    fake_chunk = type(
+        "Chunk",
+        (),
+        {"choices": [type("C", (), {"delta": type("D", (), {"content": "x"})()})()]},
+    )()
+
+    async def fake_stream():
+        yield fake_chunk
+
+    seen_kwargs: dict = {}
+
+    async def acompletion(**kwargs):
+        seen_kwargs.update(kwargs)
+        return fake_stream()
+
+    with patch("backend.llm.providers.litellm.acompletion", new=acompletion):
+        async for _ in chat_completion_stream(
+            messages=[{"role": "user", "content": "hi"}],
+            model="anthropic/claude-sonnet-4-6",
+            api_key=None,
+            api_base=None,
+        ):
+            pass
+
+    assert "api_key" not in seen_kwargs
+    assert "api_base" not in seen_kwargs
