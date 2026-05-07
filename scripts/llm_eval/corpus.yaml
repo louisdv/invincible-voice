@@ -1,0 +1,100 @@
+# 10 cas typiques pour évaluer les LLM candidats.
+# Chaque cas simule un état au moment où le LLM est appelé.
+
+user_settings:
+  name: "Pierre"
+  prompt: |
+    Je suis Pierre, j'ai 52 ans, je vis avec ma femme Marie et notre fils Lucas.
+    Je suis atteint de la SLA et je communique grâce à cette application.
+  friends: ["Marie", "Lucas", "Sophie", "Antoine"]
+  language: "fr"
+
+cases:
+  - id: "comment_ca_va_no_context"
+    desired_length: "M"
+    hint: null
+    history:
+      - role: speaker
+        content: "Coucou Pierre, comment ça va aujourd'hui ?"
+
+  - id: "comment_ca_va_with_hint"
+    desired_length: "M"
+    hint: "fatigué"
+    history:
+      - role: speaker
+        content: "Coucou Pierre, comment ça va aujourd'hui ?"
+
+  - id: "resto_invitation"
+    desired_length: "M"
+    hint: null
+    history:
+      - role: speaker
+        content: "Tu veux qu'on aille au resto ce soir ?"
+
+  - id: "soeur_news"
+    desired_length: "M"
+    hint: null
+    history:
+      - role: speaker
+        content: "J'ai vu ta sœur Sophie ce matin, elle m'a dit qu'elle passerait dimanche."
+
+  - id: "long_conversation"
+    desired_length: "M"
+    hint: null
+    history:
+      - role: speaker
+        content: "Bonjour, alors ce week-end ?"
+      - role: writer
+        content: "Très bien, on a fait du jardinage avec Marie."
+      - role: speaker
+        content: "Vous avez planté quoi ?"
+      - role: writer
+        content: "Des tomates, du basilic, et quelques fleurs."
+      - role: speaker
+        content: "Ça donne envie. Et Lucas, il aide ?"
+      - role: writer
+        content: "Un peu. Il préfère arroser que désherber."
+      - role: speaker
+        content: "Et toi tu te sens comment depuis la semaine dernière ?"
+
+  - id: "english_case"
+    desired_length: "M"
+    hint: null
+    history:
+      - role: speaker
+        content: "Hi Pierre, how was your day?"
+
+  - id: "spanish_case"
+    desired_length: "M"
+    hint: null
+    history:
+      - role: speaker
+        content: "Hola Pierre, ¿qué tal estás?"
+
+  - id: "topic_change"
+    desired_length: "M"
+    hint: "vacances"
+    history:
+      - role: speaker
+        content: "C'était chaud aujourd'hui à la pharmacie, j'ai attendu 30 min."
+
+  - id: "very_short"
+    desired_length: "XS"
+    hint: null
+    history:
+      - role: speaker
+        content: "Tu veux du café ?"
+
+  - id: "very_long"
+    desired_length: "XL"
+    hint: null
+    history:
+      - role: speaker
+        content: "Raconte-moi un peu tes souvenirs d'enfance, tes vacances en bord de mer."
+
+  - id: "stt_typo"
+    desired_length: "M"
+    hint: null
+    history:
+      - role: speaker
+        content: "Lucas rentre en classe de CO2 cette année, c'est ça ?"
