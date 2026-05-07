@@ -12,7 +12,10 @@ from typing import Any
 
 import litellm
 import yaml
+from dotenv import load_dotenv
 from pydantic import BaseModel
+
+load_dotenv(Path(__file__).parent / ".env")
 
 
 MODELS: list[str] = [
