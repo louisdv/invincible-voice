@@ -1,0 +1,23 @@
+name: Deploy to staging
+
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ vars.SERVER_HOST }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/invincible-voice-staging
+            git pull origin staging
+            docker compose -p invincible-voice-staging --env-file .env.staging -f docker-compose.staging.yml up -d --build
+            docker image prune -f
