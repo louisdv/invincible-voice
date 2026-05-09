@@ -1,0 +1,77 @@
+# Staging stack — lite (frontend + backend + redis only).
+# Réutilise le Traefik prod via labels (Host=staging.voice.amiral.tech).
+# À lancer avec : docker compose -p invincible-voice-staging --env-file .env.staging \
+#   -f docker-compose.staging.yml up -d --build
+services:
+
+  frontend:
+    image: invincible-voice-staging-frontend:latest
+    build:
+      context: services/frontend/
+      dockerfile: Dockerfile
+    environment:
+      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+    labels:
+      - "traefik.enable=true"
+      - "pub_port=80"
+      - "traefik.http.routers.frontend-staging.rule=Host(`${DOMAIN}`) && PathPrefix(`/`)"
+      - "traefik.http.routers.frontend-staging.entrypoints=websecure"
+      - "traefik.http.routers.frontend-staging.tls=true"
+      - "traefik.http.routers.frontend-staging.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend-staging.priority=10"
+      - "traefik.http.services.frontend-staging.loadbalancer.server.port=3000"
+    restart: unless-stopped
+
+  backend:
+    image: invincible-voice-staging-backend:latest
+    build:
+      context: services/backend
+      target: prod
+    volumes:
+      - users_data:/users_data
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - TTS_LOCK_TTL_SECONDS=300
+      - STT_LOCK_TTL_SECONDS=600
+      - KYUTAI_LLM_URL=${KYUTAI_LLM_URL:-}
+      - KYUTAI_LLM_API_KEY=${KYUTAI_LLM_API_KEY:-}
+      - KYUTAI_LLM_MODEL=${KYUTAI_LLM_MODEL}
+      - KYUTAI_LLM_MODEL_FALLBACK=${KYUTAI_LLM_MODEL_FALLBACK:-cerebras/llama3.1-8b}
+      - KYUTAI_USERS_DATA_PATH=/users_data
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GRADIUM_API_KEY=${GRADIUM_API_KEY}
+      - TTS_VOICE_ID=${TTS_VOICE_ID}
+      - STT_IS_GRADIUM=${STT_IS_GRADIUM}
+      - KYUTAI_STT_URL=${KYUTAI_STT_URL}
+      - TTS_IS_GRADIUM=${TTS_IS_GRADIUM}
+      - TTS_SERVER=${TTS_SERVER}
+      - KYUTAI_API_KEY=${KYUTAI_API_KEY:-}
+      - ALLOW_PASSWORD=${ALLOW_PASSWORD:-true}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - CORS_ALLOW_ORIGINS=https://${DOMAIN}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - CEREBRAS_API_KEY=${CEREBRAS_API_KEY:-}
+    labels:
+      - "traefik.enable=true"
+      - "pub_port=80"
+      - "traefik.http.routers.backend-staging.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend-staging.middlewares=strip-api-staging"
+      - "traefik.http.middlewares.strip-api-staging.replacepathregex.regex=^/api/(.*)"
+      - "traefik.http.middlewares.strip-api-staging.replacepathregex.replacement=/$$1"
+      - "traefik.http.routers.backend-staging.entrypoints=websecure"
+      - "traefik.http.routers.backend-staging.tls=true"
+      - "traefik.http.routers.backend-staging.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend-staging.loadbalancer.server.port=80"
+      - "traefik.http.routers.backend-staging.priority=100"
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    restart: unless-stopped
+
+volumes:
+  users_data:
