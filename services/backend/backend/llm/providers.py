@@ -13,6 +13,12 @@ from typing import Any, AsyncIterator
 
 import litellm
 
+# Anthropic rejects prompts that contain only a system message (raises
+# BadRequestError at conversation start, before any user STT result has
+# arrived). modify_params lets LiteLLM auto-inject a dummy user message
+# in that case, and convert response_format to tool-use for Anthropic.
+litellm.modify_params = True
+
 logger = logging.getLogger(__name__)
 
 

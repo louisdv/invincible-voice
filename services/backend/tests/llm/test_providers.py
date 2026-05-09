@@ -2,7 +2,15 @@
 
 from unittest.mock import AsyncMock, patch
 
+import litellm
 import pytest
+
+
+def test_modify_params_is_enabled_at_import():
+    """Importing providers must enable litellm.modify_params for Anthropic compat."""
+    import backend.llm.providers  # noqa: F401
+
+    assert litellm.modify_params is True
 
 
 @pytest.mark.asyncio
