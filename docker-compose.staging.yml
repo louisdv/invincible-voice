@@ -11,6 +11,9 @@ services:
       dockerfile: Dockerfile
     environment:
       - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+    networks:
+      - default
+      - traefik
     labels:
       - "traefik.enable=true"
       - "pub_port=80"
@@ -54,6 +57,9 @@ services:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - CEREBRAS_API_KEY=${CEREBRAS_API_KEY:-}
+    networks:
+      - default
+      - traefik
     labels:
       - "traefik.enable=true"
       - "pub_port=80"
@@ -75,3 +81,9 @@ services:
 
 volumes:
   users_data:
+
+networks:
+  default:
+  traefik:
+    name: invincible-voice_default
+    external: true
