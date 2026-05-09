@@ -73,3 +73,27 @@ uv run uvicorn backend.main:app --reload --port 80
 - **OS** : Ubuntu 24.04 aarch64
 - **Répertoire** : `/opt/invincible-voice`
 - **Certificat** : Let's Encrypt auto via Traefik
+
+## Staging
+
+- **URL** : https://staging.voice.amiral.tech
+- **Serveur** : même VPS que prod (`178.105.76.90`)
+- **Répertoire** : `/opt/invincible-voice-staging`
+- **Branche** : `staging` (push direct, déployée auto via `.github/workflows/deploy-staging.yml`)
+- **Stack** : frontend + backend + redis (pas de Prometheus/Grafana — KISS)
+- **Compose project** : `invincible-voice-staging` (volumes isolés de la prod)
+
+### Logs staging
+```bash
+ssh root@178.105.76.90 'cd /opt/invincible-voice-staging && docker compose -p invincible-voice-staging -f docker-compose.staging.yml logs -f --tail=100'
+```
+
+### Forcer un redeploy staging
+```bash
+ssh root@178.105.76.90 'cd /opt/invincible-voice-staging && git pull origin staging && docker compose -p invincible-voice-staging --env-file .env.staging -f docker-compose.staging.yml up -d --build'
+```
+
+### Éditer `.env.staging`
+```bash
+ssh root@178.105.76.90 'cd /opt/invincible-voice-staging && cp .env.staging .env.staging.bak.$(date -u +%Y%m%d-%H%M%S) && nano .env.staging'
+```
