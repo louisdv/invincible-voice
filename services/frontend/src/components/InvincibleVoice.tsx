@@ -15,6 +15,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import Cookies from 'universal-cookie';
 import { addAuthHeaders } from '@/auth/authUtils';
 import CouldNotConnect, { HealthStatus } from '@/components/CouldNotConnect';
+import ContextsSelector from '@/components/ContextsSelector';
 import KeywordsSuggestion from '@/components/KeywordsSuggestion';
 import ResponseOptions from '@/components/ResponseOptions';
 import ChatInterface, {
@@ -94,6 +95,12 @@ const InvincibleVoice = () => {
     useState<number | null>(null);
   const [textInput, setTextInput] = useState<string>('');
   const [lastSentKeywords, setLastSentKeywords] = useState<string | null>(null);
+  const [activeContextIds, setActiveContextIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const [lastSentContexts, setLastSentContexts] = useState<string[] | null>(
+    null,
+  );
   const [lastSentText, setLastSentText] = useState<string>('');
   const textInputTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
@@ -327,6 +334,42 @@ const InvincibleVoice = () => {
     },
     [sendMessage, lastSentKeywords],
   );
+  const sendCurrentContexts = useCallback(
+    (labels: string[]) => {
+      const sortedA = [...labels].sort();
+      const sortedB = lastSentContexts ? [...lastSentContexts].sort() : null;
+      if (
+        sortedB === null ||
+        JSON.stringify(sortedA) !== JSON.stringify(sortedB)
+      ) {
+        sendMessage(
+          JSON.stringify({ type: 'current.contexts', contexts: labels }),
+        );
+        setLastSentContexts(labels);
+      }
+    },
+    [sendMessage, lastSentContexts],
+  );
+
+  const handleContextToggle = useCallback(
+    (contextId: string) => {
+      setActiveContextIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(contextId)) {
+          next.delete(contextId);
+        } else {
+          next.add(contextId);
+        }
+        const labels = (userData?.user_settings?.contexts ?? [])
+          .filter((c) => next.has(c.id))
+          .map((c) => c.label);
+        sendCurrentContexts(labels);
+        return next;
+      });
+    },
+    [sendCurrentContexts, userData?.user_settings?.contexts],
+  );
+
   const handleSelectResponseSize = useCallback(
     (newSize: ResponseSize) => {
       setResponseSize(newSize);
@@ -1026,6 +1069,9 @@ const InvincibleVoice = () => {
       return;
     }
 
+    setActiveContextIds(new Set());
+    setLastSentContexts(null);
+    sendMessage(JSON.stringify({ type: 'current.contexts', contexts: [] }));
     setRawChatHistory([]);
     clearResponses();
     setCurrentSpeakerMessage('');
@@ -1121,6 +1167,9 @@ const InvincibleVoice = () => {
             additionalKeywords={
               userData?.user_settings?.additional_keywords ?? []
             }
+            contexts={userData?.user_settings?.contexts ?? []}
+            activeContextIds={activeContextIds}
+            onContextToggle={handleContextToggle}
             onBack={() => {
               if (isViewingPastConversation) {
                 // Viewing a past conversation → go back to history list
@@ -1302,6 +1351,11 @@ const InvincibleVoice = () => {
                     </div>
                   </div>
                 )}
+                <ContextsSelector
+                  contexts={userData?.user_settings?.contexts ?? []}
+                  activeContextIds={activeContextIds}
+                  onToggle={handleContextToggle}
+                />
                 <div className='w-full px-6 py-4 bg-[#101010] rounded-[40px]'>
                   <div className='mb-1 text-sm font-medium text-white'>
                     {t('common.friends')}
