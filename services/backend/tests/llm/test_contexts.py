@@ -82,3 +82,44 @@ def test_system_prompt_omits_active_contexts_section_when_empty():
         active_contexts=[],
     )
     assert "## Active contexts" not in messages[0].content
+
+
+from backend.llm.chatbot import Chatbot
+
+
+def test_chatbot_initializes_current_contexts_to_empty_list():
+    user_data = _make_user_data()
+    chatbot = Chatbot(user_data, dt.datetime(2026, 5, 12, 10, 0))
+    assert chatbot.current_contexts == []
+
+
+def test_chatbot_proxy_hash_changes_when_contexts_change():
+    user_data = _make_user_data()
+    chatbot = Chatbot(user_data, dt.datetime(2026, 5, 12, 10, 0))
+    h0 = chatbot.proxy_hash()
+
+    chatbot.current_contexts = ["Au travail"]
+    h1 = chatbot.proxy_hash()
+    assert h1 != h0
+
+    chatbot.current_contexts = ["Au travail", "Avec Paul"]
+    h2 = chatbot.proxy_hash()
+    assert h2 != h1
+
+
+def test_chatbot_proxy_hash_stable_when_contexts_unchanged():
+    user_data = _make_user_data()
+    chatbot = Chatbot(user_data, dt.datetime(2026, 5, 12, 10, 0))
+    chatbot.current_contexts = ["Au travail"]
+    h_a = chatbot.proxy_hash()
+    h_b = chatbot.proxy_hash()
+    assert h_a == h_b
+
+
+def test_chatbot_preprocessed_messages_passes_current_contexts():
+    user_data = _make_user_data()
+    chatbot = Chatbot(user_data, dt.datetime(2026, 5, 12, 10, 0))
+    chatbot.current_contexts = ["Au travail"]
+    messages = chatbot.preprocessed_messages()
+    assert "## Active contexts" in messages[0]["content"]
+    assert "- Au travail" in messages[0]["content"]
