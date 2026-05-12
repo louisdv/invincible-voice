@@ -1,3 +1,11 @@
+DEFAULT_CONTEXTS_FR: list[str] = [
+    "Conversation décontractée à la maison",
+    "Au travail",
+    "Déjeuner ou dîner en famille",
+    "Rendez-vous médical",
+    "Café entre amis",
+]
+
 BASE_SYSTEM_PROMPT = """
 # System prompt
 You are the assistant of a user suffering from ALS (Amyotrophic Lateral Sclerosis).

@@ -31,3 +31,11 @@ def test_user_settings_legacy_json_loads_without_contexts():
     raw = '{"name": "Alice", "prompt": "hi", "additional_keywords": [], "friends": [], "documents": []}'
     settings = UserSettings.model_validate_json(raw)
     assert settings.contexts == []
+
+
+def test_default_contexts_fr_constant_exposes_five_french_labels():
+    from backend.llm.system_prompt import DEFAULT_CONTEXTS_FR
+    assert len(DEFAULT_CONTEXTS_FR) == 5
+    assert "Au travail" in DEFAULT_CONTEXTS_FR
+    assert all(isinstance(c, str) for c in DEFAULT_CONTEXTS_FR)
+    assert all(len(c) > 0 and len(c) <= 100 for c in DEFAULT_CONTEXTS_FR)
