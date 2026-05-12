@@ -39,7 +39,10 @@ class UserData(pydantic.BaseModel):
         logger.info(f"User data saved to {user_data_path}")
 
     def to_llm_ready_conversation(
-        self, user_text_hint: str | None, desired_responses_length: ora.ResponsesLenght
+        self,
+        user_text_hint: str | None,
+        desired_responses_length: ora.ResponsesLenght,
+        active_contexts: list[str],
     ) -> list[LLMMessage]:
         result = []
 
@@ -49,6 +52,16 @@ class UserData(pydantic.BaseModel):
         prompt += f"The user is {self.user_settings.name}.\n\n"
         prompt += "## User's prompt\n"
         prompt += self.user_settings.prompt + "\n\n"
+        if active_contexts:
+            prompt += "## Active contexts\n"
+            prompt += (
+                "The user has indicated they are currently in these situations or "
+                "contexts. Use them to orient your suggestions (vocabulary, tone, "
+                "topic relevance):\n"
+            )
+            for ctx in active_contexts:
+                prompt += f"- {ctx}\n"
+            prompt += "\n"
         prompt += "## User's friends\n"
         prompt += f"The friends of the user are: {self.user_settings.friends}\n\n"
         prompt += "## User's documents\n"

@@ -127,7 +127,9 @@ class Chatbot:
         logger.info(f"Length of chat history {len(self.current_conversation)}")
 
         result = self.user_data.to_llm_ready_conversation(
-            self.current_keywords, self.desired_responses_length
+            self.current_keywords,
+            self.desired_responses_length,
+            [],  # active_contexts - sera renseigné en Task A4
         )
         messages = [x.model_dump(mode="json") for x in result]
 
