@@ -23,7 +23,7 @@ import {
   createVoice,
   deleteVoice,
 } from '@/utils/userData';
-import type { UserSettings } from '@/utils/userData';
+import type { Context, UserSettings } from '@/utils/userData';
 import DocumentEditorPopup from './DocumentEditorPopup';
 import EmailField from './EmailField';
 
@@ -46,6 +46,8 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [newFriendInput, setNewFriendInput] = useState<string>('');
   const [newKeywordInput, setNewKeywordInput] = useState<string>('');
+  const [newContextInput, setNewContextInput] = useState<string>('');
+  const [contextInputError, setContextInputError] = useState<string | null>(null);
   const [isDocumentEditorOpen, setIsDocumentEditorOpen] = useState(false);
   const [editingDocument, setEditingDocument] = useState<Document | null>(null);
   const [editingDocumentIndex, setEditingDocumentIndex] = useState<
@@ -73,7 +75,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
   const handleInputChange = useCallback(
     (
       field: keyof UserSettings,
-      value: string | string[] | Document[] | boolean | null,
+      value: string | string[] | Document[] | Context[] | boolean | null,
     ) => {
       setFormData((prev) => ({
         ...prev,
@@ -143,6 +145,45 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
       }
     },
     [handleAddKeyword],
+  );
+  const handleAddContext = useCallback(() => {
+    const label = newContextInput.trim();
+    if (!label) return;
+    if (label.length > 100) {
+      setContextInputError(t('settings.contextTooLong'));
+      return;
+    }
+    const exists = formData.contexts.some(
+      (c) => c.label.toLowerCase() === label.toLowerCase(),
+    );
+    if (exists) {
+      setContextInputError(t('settings.contextDuplicate'));
+      return;
+    }
+    handleInputChange('contexts', [
+      ...formData.contexts,
+      { id: crypto.randomUUID(), label },
+    ]);
+    setNewContextInput('');
+    setContextInputError(null);
+  }, [formData.contexts, handleInputChange, newContextInput, t]);
+  const handleRemoveContext = useCallback(
+    (contextId: string) => {
+      handleInputChange(
+        'contexts',
+        formData.contexts.filter((c) => c.id !== contextId),
+      );
+    },
+    [formData.contexts, handleInputChange],
+  );
+  const handleContextInputKeyPress = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleAddContext();
+      }
+    },
+    [handleAddContext],
   );
   const handleAddDocument = useCallback(() => {
     setEditingDocument(null);
@@ -681,6 +722,71 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                   />
                   <button
                     onClick={handleAddKeyword}
+                    className='absolute shrink-0 h-8 p-px right-1 inset-y-1 w-fit green-to-purple-via-blue-gradient rounded-xl'
+                    style={{
+                      filter:
+                        'drop-shadow(0rem 0.2rem 0.15rem var(--darkgray))',
+                    }}
+                  >
+                    <div className='h-full w-full pl-4 pr-3 flex flex-row bg-[#181818] items-center justify-center gap-1 rounded-xl text-sm'>
+                      {t('common.add')}
+                      <Plus
+                        width={24}
+                        height={24}
+                        className='shrink-0 text-white'
+                      />
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className='w-full px-6 py-4 bg-[#101010] rounded-[40px]'>
+              <div className='block mb-1 text-sm font-medium text-white'>
+                {t('settings.contexts')}
+              </div>
+              <div className='flex flex-col w-full gap-0.5'>
+                <div className='flex flex-wrap gap-1.5 min-h-6 max-h-28 overflow-y-auto overflow-x-hidden py-2'>
+                  {formData.contexts.map((ctx) => (
+                    <div
+                      key={ctx.id}
+                      className='inline-flex items-center gap-1 h-8 px-3 bg-[#1B1B1B] border border-gray-600 rounded-2xl text-sm text-white'
+                    >
+                      <span>{ctx.label}</span>
+                      <button
+                        type='button'
+                        onClick={() => handleRemoveContext(ctx.id)}
+                        aria-label={`Remove ${ctx.label}`}
+                        className='text-gray-400 hover:text-red-400'
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+                  {formData.contexts.length === 0 && (
+                    <p className='text-sm italic text-gray-500'>
+                      {t('settings.noContextsAdded')}
+                    </p>
+                  )}
+                </div>
+                {contextInputError && (
+                  <p className='text-xs text-red-400'>{contextInputError}</p>
+                )}
+                <div className='relative flex gap-2'>
+                  <input
+                    type='text'
+                    value={newContextInput}
+                    onChange={(e) => {
+                      setNewContextInput(e.target.value);
+                      setContextInputError(null);
+                    }}
+                    onKeyDown={handleContextInputKeyPress}
+                    maxLength={100}
+                    className='flex-1 px-4 py-1 text-sm text-white bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green h-10'
+                    placeholder={t('settings.addContextPlaceholder')}
+                  />
+                  <button
+                    type='button'
+                    onClick={handleAddContext}
                     className='absolute shrink-0 h-8 p-px right-1 inset-y-1 w-fit green-to-purple-via-blue-gradient rounded-xl'
                     style={{
                       filter:
