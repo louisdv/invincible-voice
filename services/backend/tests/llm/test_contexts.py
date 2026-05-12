@@ -190,3 +190,28 @@ def test_seed_skipped_if_contexts_already_populated(tmp_path, monkeypatch):
     assert len(loaded.user_settings.contexts) == 1
     assert loaded.user_settings.contexts[0].id == existing_ctx_id
     assert loaded.user_settings.contexts[0].label == "Custom"
+
+
+def test_get_new_user_seeds_default_contexts():
+    """A freshly registered user must already have DEFAULT_CONTEXTS_FR seeded."""
+    from backend.routes.auth import get_new_user
+
+    user = get_new_user(email="new@example.com", language="fr", hashed_password="x")
+    assert len(user.user_settings.contexts) == 5
+    labels = [c.label for c in user.user_settings.contexts]
+    assert "Au travail" in labels
+    # Each context has a unique UUID
+    ids = [c.id for c in user.user_settings.contexts]
+    assert len(set(ids)) == 5
+
+
+def test_get_new_user_seeds_default_contexts_regardless_of_language():
+    """Defaults are FR regardless of selected language (FR is project's primary language)."""
+    from backend.routes.auth import get_new_user
+
+    user_en = get_new_user(email="en@example.com", language="en", hashed_password="x")
+    user_de = get_new_user(email="de@example.com", language="de", hashed_password="x")
+    fr_labels = [c.label for c in user_en.user_settings.contexts]
+    de_labels = [c.label for c in user_de.user_settings.contexts]
+    assert "Au travail" in fr_labels
+    assert "Au travail" in de_labels
