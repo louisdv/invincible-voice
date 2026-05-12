@@ -153,6 +153,11 @@ class UnmuteHandler(AsyncStreamHandler):
             # If there was a generated response before, it likely didn't have the keywords
             await self._generate_response()
 
+    async def set_current_contexts(self, message: ora.CurrentContexts) -> None:
+        self.chatbot.current_contexts = message.contexts
+        logger.info("Active contexts set to %s", message.contexts)
+        await self._generate_response()
+
     async def set_desired_responses_length(
         self, message: ora.DesiredResponsesLenght
     ) -> None:

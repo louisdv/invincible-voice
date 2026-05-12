@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowLeft, Pause, Settings } from 'lucide-react';
+import ContextsSelector from '@/components/ContextsSelector';
 import {
   useState,
   useCallback,
@@ -18,6 +19,7 @@ import { ResponseSize, RESPONSES_SIZES } from '@/constants';
 import { useViewportHeight } from '@/hooks/useViewportHeight';
 import { useTranslations } from '@/i18n';
 import { ChatMessage } from '@/types/chatHistory';
+import { Context } from '@/types/user';
 import { Conversation } from '@/utils/userData';
 
 type ActivePanel = 'chat' | 'responses' | 'history';
@@ -48,6 +50,9 @@ interface MobileConversationLayoutProps {
   onBack?: () => void;
   isHistoryMode?: boolean;
   additionalKeywords?: string[];
+  contexts?: Context[];
+  activeContextIds?: Set<string>;
+  onContextToggle?: (contextId: string) => void;
 }
 
 // Size sent to the backend per tab:
@@ -86,6 +91,9 @@ const MobileConversationLayout: FC<MobileConversationLayoutProps> = ({
   onBack = undefined,
   isHistoryMode = false,
   additionalKeywords = [],
+  contexts = [],
+  activeContextIds = new Set<string>(),
+  onContextToggle = undefined,
 }) => {
   const t = useTranslations();
   const [activePanel, setActivePanel] =
@@ -304,6 +312,16 @@ const MobileConversationLayout: FC<MobileConversationLayoutProps> = ({
 
       {/* Always-visible text input footer */}
       <div className='px-4 pt-2 pb-1 landscape:pt-1 landscape:pb-0 border-t border-gray-700 shrink-0'>
+        {/* Context chips — hidden in landscape to save space */}
+        {contexts.length > 0 && (
+          <div className='mb-2 landscape:hidden'>
+            <ContextsSelector
+              contexts={contexts}
+              activeContextIds={activeContextIds}
+              onToggle={onContextToggle ?? (() => {})}
+            />
+          </div>
+        )}
         {/* Top LLM suggestions (up to 2) — hidden on Responses tab and in landscape */}
         {topSuggestions.length > 0 && (
           <div className='flex gap-2 mb-2 overflow-x-auto no-scrollbar landscape:hidden'>

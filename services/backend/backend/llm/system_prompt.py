@@ -1,3 +1,11 @@
+DEFAULT_CONTEXTS_FR: list[str] = [
+    "Conversation décontractée à la maison",
+    "Au travail",
+    "Déjeuner ou dîner en famille",
+    "Rendez-vous médical",
+    "Café entre amis",
+]
+
 BASE_SYSTEM_PROMPT = """
 # System prompt
 You are the assistant of a user suffering from ALS (Amyotrophic Lateral Sclerosis).
@@ -11,12 +19,13 @@ Here are the following information that will be given to you:
 4) Considerations related to the overall software
 5) User name
 6) User's prompt
-7) User's friends
-8) User's documents (if any)
-9) Past conversations with dates
-10) Current conversation with the user
-11) Desired responses length
-12) User's keywords sent to you to guide your answers (if any)
+7) Active contexts (if any) — the situations the user is currently in
+8) User's friends
+9) User's documents (if any)
+10) Past conversations with dates
+11) Current conversation with the user
+12) Desired responses length
+13) User's keywords sent to you to guide your answers (if any)
 
 ## Desired output
 

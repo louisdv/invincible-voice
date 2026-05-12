@@ -11,7 +11,8 @@ from backend.storage import (
     get_user_data_from_storage,
     get_user_data_path,
 )
-from backend.typing import UserSettings
+from backend.llm.system_prompt import DEFAULT_CONTEXTS_FR
+from backend.typing import Context, UserSettings
 
 auth_router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -130,6 +131,10 @@ def get_new_user(
             prompt="",
             additional_keywords=default_keywords[language],
             friends=[],
+            contexts=[
+                Context(id=uuid.uuid4(), label=label)
+                for label in DEFAULT_CONTEXTS_FR
+            ],
         ),
         conversations=[],
     )
