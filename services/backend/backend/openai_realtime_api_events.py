@@ -123,6 +123,10 @@ class CurrentKeywords(BaseEvent[Literal["current.keywords"]]):
     keywords: str | None
 
 
+class CurrentContexts(BaseEvent[Literal["current.contexts"]]):
+    contexts: list[str]
+
+
 class DesiredResponsesLenght(BaseEvent[Literal["desired.responses.length"]]):
     length: ResponsesLenght
 
@@ -188,6 +192,7 @@ ClientEvent = Union[
     InputAudioBufferAppend,
     ResponseSelectedByWriter,
     CurrentKeywords,
+    CurrentContexts,
     DesiredResponsesLenght,
 ]
 

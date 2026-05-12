@@ -175,6 +175,8 @@ async def receive_loop(
                 await handler.receive((SAMPLE_RATE, pcm[np.newaxis, :]))
         elif isinstance(message, ora.CurrentKeywords):
             await handler.add_keywords(message)
+        elif isinstance(message, ora.CurrentContexts):
+            await handler.set_current_contexts(message)
         elif isinstance(message, ora.DesiredResponsesLenght):
             await handler.set_desired_responses_length(message)
 
