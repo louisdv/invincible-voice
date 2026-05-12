@@ -8,8 +8,8 @@ from cloudpathlib import AnyPath
 
 from backend import kyutai_constants
 from backend import openai_realtime_api_events as ora
-from backend.llm.system_prompt import BASE_SYSTEM_PROMPT
-from backend.typing import Conversation, LLMMessage, SpeakerMessage, UserSettings
+from backend.llm.system_prompt import BASE_SYSTEM_PROMPT, DEFAULT_CONTEXTS_FR
+from backend.typing import Context, Conversation, LLMMessage, SpeakerMessage, UserSettings
 
 logger = logging.getLogger(__name__)
 
@@ -135,5 +135,10 @@ def get_user_data_from_storage(user_email: str) -> UserData:
     user_data_path = get_user_data_path(user_email)
     if not user_data_path.exists():
         raise UserDataNotFoundError(f"No user data found for email: {user_email}")
-    else:
-        return UserData.model_validate_json(user_data_path.read_text())
+    user_data = UserData.model_validate_json(user_data_path.read_text())
+    if not user_data.user_settings.contexts:
+        user_data.user_settings.contexts = [
+            Context(id=uuid.uuid4(), label=label) for label in DEFAULT_CONTEXTS_FR
+        ]
+        user_data.save()
+    return user_data

@@ -123,3 +123,70 @@ def test_chatbot_preprocessed_messages_passes_current_contexts():
     messages = chatbot.preprocessed_messages()
     assert "## Active contexts" in messages[0]["content"]
     assert "- Au travail" in messages[0]["content"]
+
+
+def test_seed_default_contexts_on_load_when_empty(tmp_path, monkeypatch):
+    """get_user_data_from_storage should seed DEFAULT_CONTEXTS_FR if contexts is empty."""
+    from backend import kyutai_constants
+    from backend.storage import get_user_data_from_storage
+
+    monkeypatch.setattr(
+        kyutai_constants, "USERS_SETTINGS_AND_HISTORY_DIR", tmp_path
+    )
+
+    legacy = UserData(
+        user_id=uuid.uuid4(),
+        email="legacy@example.com",
+        hashed_password="x",
+        user_settings=UserSettings(
+            name="Legacy",
+            prompt="hi",
+            additional_keywords=[],
+            friends=[],
+        ),
+        conversations=[],
+    )
+    (tmp_path / "legacy@example.com.json").write_text(legacy.model_dump_json())
+
+    loaded = get_user_data_from_storage("legacy@example.com")
+    assert len(loaded.user_settings.contexts) == 5
+    labels = [c.label for c in loaded.user_settings.contexts]
+    assert "Au travail" in labels
+
+    # Persisted to disk
+    reloaded = get_user_data_from_storage("legacy@example.com")
+    assert len(reloaded.user_settings.contexts) == 5
+    # IDs are stable across reloads
+    assert [c.id for c in loaded.user_settings.contexts] == [
+        c.id for c in reloaded.user_settings.contexts
+    ]
+
+
+def test_seed_skipped_if_contexts_already_populated(tmp_path, monkeypatch):
+    from backend import kyutai_constants
+    from backend.storage import get_user_data_from_storage
+
+    monkeypatch.setattr(
+        kyutai_constants, "USERS_SETTINGS_AND_HISTORY_DIR", tmp_path
+    )
+
+    existing_ctx_id = uuid.uuid4()
+    user = UserData(
+        user_id=uuid.uuid4(),
+        email="user@example.com",
+        hashed_password="x",
+        user_settings=UserSettings(
+            name="User",
+            prompt="hi",
+            additional_keywords=[],
+            friends=[],
+            contexts=[Context(id=existing_ctx_id, label="Custom")],
+        ),
+        conversations=[],
+    )
+    (tmp_path / "user@example.com.json").write_text(user.model_dump_json())
+
+    loaded = get_user_data_from_storage("user@example.com")
+    assert len(loaded.user_settings.contexts) == 1
+    assert loaded.user_settings.contexts[0].id == existing_ctx_id
+    assert loaded.user_settings.contexts[0].label == "Custom"
