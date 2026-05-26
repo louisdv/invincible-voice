@@ -39,6 +39,14 @@ export interface Document {
 }
 
 /**
+ * Represents a context (clickable tag injected into the prompt)
+ */
+export interface Context {
+  id: string;
+  label: string;
+}
+
+/**
  * User settings and preferences
  */
 export interface UserSettings {
@@ -47,6 +55,7 @@ export interface UserSettings {
   additional_keywords: string[];
   friends: string[];
   documents: Document[];
+  contexts: Context[];
   voice: string | null;
   expected_transcription_language: string | null;
   accepted_terms_of_services: boolean;

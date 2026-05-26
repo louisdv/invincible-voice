@@ -3,12 +3,18 @@ export interface Document {
   content: string;
 }
 
+export interface Context {
+  id: string;
+  label: string;
+}
+
 export interface UserSettings {
   name: string;
   prompt: string;
   additional_keywords: string[];
   friends: string[];
   documents: Document[];
+  contexts: Context[];
   voice: string | null;
   expected_transcription_language: string | null;
   accepted_terms_of_services: boolean;

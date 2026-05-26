@@ -31,12 +31,18 @@ class Document(pydantic.BaseModel):
     content: str
 
 
+class Context(pydantic.BaseModel):
+    id: uuid.UUID
+    label: str
+
+
 class UserSettings(pydantic.BaseModel):
     name: str
     prompt: str
     additional_keywords: list[str]
     friends: list[str]
     documents: list[Document] = pydantic.Field(default_factory=list)
+    contexts: list[Context] = pydantic.Field(default_factory=list)
     voice: str | None = None
     expected_transcription_language: str | None = None
     accepted_terms_of_services: bool = False

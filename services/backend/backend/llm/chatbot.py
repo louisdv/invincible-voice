@@ -18,6 +18,7 @@ class Chatbot:
         self.conversation_state_override: ConversationState | None = None
         # Text to guide the answers of the LLM
         self.current_keywords: str | None = None
+        self.current_contexts: list[str] = []
         self.user_data = user_data
         # We start a new conversation in the user data
         # Note that the system prompt is not there, it's set dynamically
@@ -38,6 +39,7 @@ class Chatbot:
         return hash(
             (
                 self.current_keywords,
+                tuple(self.current_contexts),
                 len(self.user_data.conversations[-1].messages),
                 last_message_len,
                 self.desired_responses_length,
@@ -127,7 +129,9 @@ class Chatbot:
         logger.info(f"Length of chat history {len(self.current_conversation)}")
 
         result = self.user_data.to_llm_ready_conversation(
-            self.current_keywords, self.desired_responses_length
+            self.current_keywords,
+            self.desired_responses_length,
+            self.current_contexts,
         )
         messages = [x.model_dump(mode="json") for x in result]
 
