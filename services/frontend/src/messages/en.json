@@ -31,7 +31,7 @@
     "textToSpeechProvider": "Text-to-speech and speech-to-text are generously provided by",
     "back": "Back",
     "termsOfService": "Terms of service",
-    "termsOfServiceMessage": "To use Invincible Voice, you must first consent to the",
+    "termsOfServiceMessage": "To use Voice, you must first consent to the",
     "accept": "Accept the terms of service",
     "refuse": "Refuse the terms of service"
   },
@@ -74,7 +74,7 @@
     "testVoiceMessage": "Hello, your voice will sound like this. You can also clone your own voice by providing an audio recording of yourself.",
     "expectedTranscriptionLanguage": "Expected transcription language",
     "letSpeechToTextGuess": "Let the speech-to-text guess",
-    "moreSettingsAvailable": "More settings are available on the desktop or tablet version of Invincible Voice"
+    "moreSettingsAvailable": "More settings are available on the desktop or tablet version of Voice"
   },
   "conversation": {
     "yesterday": "Yesterday",
@@ -82,7 +82,7 @@
     "newChat": "New chat",
     "stopConversation": "Stop the conversation",
     "readyToChat": "Ready to chat",
-    "startSpeaking": "Start speaking and your voice will be transcribed. InvincibleVoice will suggest responses to help communicate.",
+    "startSpeaking": "Start speaking and your voice will be transcribed. Voice will suggest responses to help communicate.",
     "emptyConversation": "Empty conversation",
     "noMessages": "This conversation has no messages.",
     "lockResponses": "Lock responses",

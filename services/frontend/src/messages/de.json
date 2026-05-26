@@ -31,7 +31,7 @@
     "textToSpeechProvider": "Text-zu-Sprache und Sprach-zu-Text werden großzügig bereitgestellt von",
     "back": "Zurück",
     "termsOfService": "Nutzungsbedingungen",
-    "termsOfServiceMessage": "Um Invincible Voice zu nutzen, müssen Sie den",
+    "termsOfServiceMessage": "Um Voice zu nutzen, müssen Sie den",
     "accept": "Nutzungsbedingungen akzeptieren",
     "refuse": "Nutzungsbedingungen ablehnen"
   },
@@ -74,7 +74,7 @@
     "testVoiceMessage": "Hallo, Ihre Stimme wird so klingen. Sie können auch Ihre eigene Stimme klonen, indem Sie eine Audioaufnahme von sich selbst bereitstellen.",
     "expectedTranscriptionLanguage": "Erwartete Transkriptionssprache",
     "letSpeechToTextGuess": "Spracherkennung selbst erraten lassen",
-    "moreSettingsAvailable": "Weitere Einstellungen sind in der Desktop- oder Tablet-Version von Invincible Voice verfügbar"
+    "moreSettingsAvailable": "Weitere Einstellungen sind in der Desktop- oder Tablet-Version von Voice verfügbar"
   },
   "conversation": {
     "yesterday": "Gestern",
@@ -82,7 +82,7 @@
     "newChat": "Neuer Chat",
     "stopConversation": "Unterhaltung beenden",
     "readyToChat": "Bereit zum Chatten",
-    "startSpeaking": "Sprechen Sie und Ihre Stimme wird transkribiert. InvincibleVoice wird Antworten vorschlagen, um die Kommunikation zu erleichtern.",
+    "startSpeaking": "Sprechen Sie und Ihre Stimme wird transkribiert. Voice wird Antworten vorschlagen, um die Kommunikation zu erleichtern.",
     "emptyConversation": "Leere Unterhaltung",
     "noMessages": "Diese Unterhaltung hat keine Nachrichten.",
     "lockResponses": "Antworten sperren",

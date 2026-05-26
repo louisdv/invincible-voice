@@ -31,7 +31,7 @@
     "textToSpeechProvider": "La synthèse vocale et la reconnaissance vocale sont gracieusement fournies par",
     "back": "Retour",
     "termsOfService": "Conditions d'utilisation",
-    "termsOfServiceMessage": "Pour utiliser Invincible Voice, vous devez d'abord consentir aux",
+    "termsOfServiceMessage": "Pour utiliser Voice, vous devez d'abord consentir aux",
     "accept": "Accepter les conditions d'utilisation",
     "refuse": "Refuser les conditions d'utilisation"
   },
@@ -74,7 +74,7 @@
     "testVoiceMessage": "Bonjour, votre voix ressemblera à cela. Vous pouvez aussi cloner votre propre voix en fournissant un enregistrement audio de vous.",
     "expectedTranscriptionLanguage": "Langue de transcription attendue",
     "letSpeechToTextGuess": "Laisser la reconnaissance vocale deviner",
-    "moreSettingsAvailable": "Plus de paramètres sont disponibles sur la version ordinateur ou tablette d'Invincible Voice"
+    "moreSettingsAvailable": "Plus de paramètres sont disponibles sur la version ordinateur ou tablette de Voice"
   },
   "conversation": {
     "yesterday": "Hier",
@@ -82,7 +82,7 @@
     "newChat": "Nouvelle discussion",
     "stopConversation": "Arrêter la conversation",
     "readyToChat": "Prêt à discuter",
-    "startSpeaking": "Commencez à parler et votre voix sera transcrite. InvincibleVoice suggérera des réponses pour aider à communiquer.",
+    "startSpeaking": "Commencez à parler et votre voix sera transcrite. Voice suggérera des réponses pour aider à communiquer.",
     "emptyConversation": "Conversation vide",
     "noMessages": "Cette conversation n'a aucun message.",
     "lockResponses": "Vérouiller les réponses",
