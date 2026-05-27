@@ -66,7 +66,7 @@ interface PendingKeyword {
   isComplete: boolean;
 }
 
-const InvincibleVoice = () => {
+const Voice = () => {
   const t = useTranslations();
   const { isDevMode } = useKeyboardShortcuts();
   const isMobile = useMobileDetection();
@@ -918,7 +918,7 @@ const InvincibleVoice = () => {
             makeErrorItem(
               isInsecure
                 ? 'Microphone access requires HTTPS. Please access this app via a secure connection.'
-                : 'Please allow microphone access to use InvincibleVoice.',
+                : 'Please allow microphone access to use Voice.',
             ),
           ];
         }
@@ -1099,7 +1099,7 @@ const InvincibleVoice = () => {
   if (!healthStatus || !backendServerUrl) {
     return (
       <div className='flex flex-col items-center justify-center min-h-screen gap-4'>
-        <h1 className='mb-4 text-xl'>Loading InvincibleVoice…</h1>
+        <h1 className='mb-4 text-xl'>Loading Voice…</h1>
       </div>
     );
   }
@@ -1499,4 +1499,4 @@ const InvincibleVoice = () => {
   );
 };
 
-export default InvincibleVoice;
+export default Voice;

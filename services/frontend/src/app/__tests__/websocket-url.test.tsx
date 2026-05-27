@@ -1,5 +1,5 @@
 import { render, act } from '@testing-library/react';
-import InvincibleVoice from '../../components/InvincibleVoice';
+import Voice from '../../components/Voice';
 
 // Mock the custom hooks
 jest.mock('../useMicrophoneAccess');
@@ -100,7 +100,7 @@ describe('WebSocket URL Construction Tests', () => {
 
   it('should construct WebSocket URL with local_time parameter', async () => {
     await act(async () => {
-      render(<InvincibleVoice userId='test-user-123' />);
+      render(<Voice userId='test-user-123' />);
     });
 
     // Verify that useWebSocket was called with the correct URL
@@ -124,7 +124,7 @@ describe('WebSocket URL Construction Tests', () => {
       .mockReturnValue('2025-07-07T13:30:00.123+05:30');
 
     await act(async () => {
-      render(<InvincibleVoice userId='test-user-456' />);
+      render(<Voice userId='test-user-456' />);
     });
 
     // Verify that special characters are properly encoded
@@ -145,7 +145,7 @@ describe('WebSocket URL Construction Tests', () => {
     const userId = 'test-user-with-special@characters.com';
 
     await act(async () => {
-      render(<InvincibleVoice userId={userId} />);
+      render(<Voice userId={userId} />);
     });
 
     // Verify that the URL is constructed correctly with user_id in path and local_time as query param
@@ -174,7 +174,7 @@ describe('WebSocket URL Construction Tests', () => {
     // Render first instance
     let unmount;
     await act(async () => {
-      const result = render(<InvincibleVoice userId='test-user-1' />);
+      const result = render(<Voice userId='test-user-1' />);
       unmount = result.unmount;
     });
 
@@ -194,7 +194,7 @@ describe('WebSocket URL Construction Tests', () => {
 
     // Render second instance
     await act(async () => {
-      render(<InvincibleVoice userId='test-user-2' />);
+      render(<Voice userId='test-user-2' />);
     });
 
     calls = useWebSocket.mock.calls;
@@ -211,7 +211,7 @@ describe('WebSocket URL Construction Tests', () => {
   it('should handle backend server URL changes while preserving local_time parameter', async () => {
     // First render with initial backend URL
     await act(async () => {
-      render(<InvincibleVoice userId='test-user-789' />);
+      render(<Voice userId='test-user-789' />);
     });
 
     const useWebSocket = require('react-use-websocket').default;

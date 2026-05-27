@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 
-import InvincibleVoice from '../../components/InvincibleVoice';
+import Voice from '../../components/Voice';
 
 // Mock all dependencies with simpler approach
 const mockSendMessage = jest.fn();
@@ -91,7 +91,7 @@ describe('Transcription Component Structure Tests', () => {
   });
 
   test('component renders with chat interface ready for transcription', async () => {
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     // Wait for component to load
     await waitFor(() => {
@@ -116,7 +116,7 @@ describe('Transcription Component Structure Tests', () => {
   });
 
   test('component shows simplified interface when not connected', async () => {
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     await waitFor(() => {
       expect(screen.getByTitle('Start Conversation')).toBeInTheDocument();
@@ -140,7 +140,7 @@ describe('Transcription Component Structure Tests', () => {
   });
 
   test('component structure supports transcription message handling flow', async () => {
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     await waitFor(() => {
       expect(screen.getByTitle('Start Conversation')).toBeInTheDocument();
@@ -166,7 +166,7 @@ describe('Transcription Component Structure Tests', () => {
   });
 
   test('component demonstrates proper WebSocket integration points', async () => {
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     await waitFor(() => {
       expect(screen.getByTitle('Start Conversation')).toBeInTheDocument();

@@ -1,14 +1,14 @@
 import { render, screen, waitFor } from '@testing-library/react';
 
-// Mock the InvincibleVoice component
-jest.mock('../InvincibleVoice', () => {
-  return function MockInvincibleVoice({ userId }: { userId: string }) {
+// Mock the Voice component
+jest.mock('../Voice', () => {
+  return function MockVoice({ userId }: { userId: string }) {
     return (
       <div
         data-testid='invincible-voice'
         data-user-id={userId}
       >
-        InvincibleVoice Component
+        Voice Component
       </div>
     );
   };
@@ -88,7 +88,7 @@ describe('Home Page Component Tests', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText('Welcome to InvincibleVoice'),
+        screen.getByText('Welcome to Voice'),
       ).toBeInTheDocument();
     });
 
@@ -124,7 +124,7 @@ describe('Home Page Component Tests', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText('Welcome to InvincibleVoice'),
+        screen.getByText('Welcome to Voice'),
       ).toBeInTheDocument();
     });
 
@@ -135,7 +135,7 @@ describe('Home Page Component Tests', () => {
     ).toBeInTheDocument();
   });
 
-  test('renders InvincibleVoice component with valid UUID', async () => {
+  test('renders Voice component with valid UUID', async () => {
     const validUUID = '12345678-1234-4234-8234-123456789012';
 
     // Mock URLSearchParams to return valid UUID
@@ -173,7 +173,7 @@ describe('Home Page Component Tests', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText('Welcome to InvincibleVoice'),
+        screen.getByText('Welcome to Voice'),
       ).toBeInTheDocument();
     });
 

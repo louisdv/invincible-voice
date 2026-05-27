@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import InvincibleVoice from '../../components/InvincibleVoice';
+import Voice from '../../components/Voice';
 
 // Mock the custom hooks
 jest.mock('../useMicrophoneAccess');
@@ -146,7 +146,7 @@ describe('Friends Section Tests', () => {
     const user = userEvent.setup();
     setupConnectionMocks();
 
-    render(<InvincibleVoice userId='test-user-123' />);
+    render(<Voice userId='test-user-123' />);
 
     await establishConnection(user);
 
@@ -178,7 +178,7 @@ describe('Friends Section Tests', () => {
       status: 200,
     });
 
-    render(<InvincibleVoice userId='test-user-123' />);
+    render(<Voice userId='test-user-123' />);
 
     await establishConnection(user);
 
@@ -191,7 +191,7 @@ describe('Friends Section Tests', () => {
     const user = userEvent.setup();
     setupConnectionMocks();
 
-    render(<InvincibleVoice userId='test-user-123' />);
+    render(<Voice userId='test-user-123' />);
 
     await establishConnection(user);
 
@@ -213,7 +213,7 @@ describe('Friends Section Tests', () => {
     const user = userEvent.setup();
     setupConnectionMocks();
 
-    render(<InvincibleVoice userId='test-user-123' />);
+    render(<Voice userId='test-user-123' />);
 
     await establishConnection(user);
 
@@ -238,7 +238,7 @@ describe('Friends Section Tests', () => {
     const user = userEvent.setup();
     setupConnectionMocks();
 
-    render(<InvincibleVoice userId='test-user-123' />);
+    render(<Voice userId='test-user-123' />);
 
     await establishConnection(user);
 
@@ -268,7 +268,7 @@ describe('Friends Section Tests', () => {
     const user = userEvent.setup();
     setupConnectionMocks();
 
-    render(<InvincibleVoice userId='test-user-123' />);
+    render(<Voice userId='test-user-123' />);
 
     await establishConnection(user);
 
@@ -287,7 +287,7 @@ describe('Friends Section Tests', () => {
     const user = userEvent.setup();
     setupConnectionMocks();
 
-    render(<InvincibleVoice userId='test-user-123' />);
+    render(<Voice userId='test-user-123' />);
 
     await establishConnection(user);
 
@@ -305,7 +305,7 @@ describe('Friends Section Tests', () => {
     const user = userEvent.setup();
     setupConnectionMocks();
 
-    render(<InvincibleVoice userId='test-user-123' />);
+    render(<Voice userId='test-user-123' />);
 
     await establishConnection(user);
 

@@ -1,6 +1,6 @@
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import InvincibleVoice from '../../components/InvincibleVoice';
+import Voice from '../../components/Voice';
 
 // Mock WebSocket
 jest.mock('react-use-websocket', () => ({
@@ -188,7 +188,7 @@ describe('CurrentKeywords Message Tests', () => {
     });
 
     await act(async () => {
-      render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+      render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
     });
 
     // Wait for start button and click it to establish connection
@@ -235,7 +235,7 @@ describe('CurrentKeywords Message Tests', () => {
     setupConnectionMocks();
 
     await act(async () => {
-      render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+      render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
     });
 
     await establishConnection(user);
@@ -274,7 +274,7 @@ describe('CurrentKeywords Message Tests', () => {
     setupConnectionMocks();
 
     await act(async () => {
-      render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+      render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
     });
 
     await establishConnection(user);
@@ -321,7 +321,7 @@ describe('CurrentKeywords Message Tests', () => {
     setupConnectionMocks();
 
     await act(async () => {
-      render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+      render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
     });
 
     await establishConnection(user);
@@ -355,7 +355,7 @@ describe('CurrentKeywords Message Tests', () => {
     setupConnectionMocks();
 
     await act(async () => {
-      render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+      render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
     });
 
     await establishConnection(user);
@@ -371,7 +371,7 @@ describe('CurrentKeywords Message Tests', () => {
     setupConnectionMocks();
 
     await act(async () => {
-      render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+      render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
     });
 
     await establishConnection(user);
@@ -387,7 +387,7 @@ describe('CurrentKeywords Message Tests', () => {
     setupConnectionMocks();
 
     await act(async () => {
-      render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+      render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
     });
 
     await establishConnection(user);

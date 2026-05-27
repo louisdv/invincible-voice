@@ -1,6 +1,6 @@
 /* eslint-disable react/function-component-definition */
 import AuthWrapper from '@/auth/AuthWrapper';
-import InvincibleVoice from '@/components/InvincibleVoice';
+import Voice from '@/components/Voice';
 
 export default function Home() {
   return (
@@ -9,7 +9,7 @@ export default function Home() {
       <div className='grey-bubble-gradient absolute -right-20 -top-36 -z-10 size-147.5 rounded-full blur-3xl' />
       <div className='flex flex-row grow'>
         <AuthWrapper>
-          <InvincibleVoice />
+          <Voice />
         </AuthWrapper>
       </div>
     </div>

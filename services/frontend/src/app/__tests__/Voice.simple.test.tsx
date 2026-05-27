@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 // Import component after mocks
-import InvincibleVoice from '../../components/InvincibleVoice';
+import Voice from '../../components/Voice';
 
 // Mock all hooks and dependencies before importing the component
 const mockSendMessage = jest.fn();
@@ -55,7 +55,7 @@ jest.mock('../useBackendServerUrl', () => ({
   useBackendServerUrl: () => 'http://localhost:8000',
 }));
 
-describe('InvincibleVoice Core Functionality Tests', () => {
+describe('Voice Core Functionality Tests', () => {
   beforeEach(() => {
     // Mock fetch for health check and user data
     global.fetch = jest.fn().mockImplementation((url: string) => {
@@ -105,7 +105,7 @@ describe('InvincibleVoice Core Functionality Tests', () => {
   });
 
   test('Connect button is rendered and clickable', async () => {
-    render(<InvincibleVoice />);
+    render(<Voice />);
 
     // Wait for health check to complete
     await waitFor(() => {
@@ -118,7 +118,7 @@ describe('InvincibleVoice Core Functionality Tests', () => {
 
   test('Connect button activates microphone access', async () => {
     const user = userEvent.setup();
-    render(<InvincibleVoice />);
+    render(<Voice />);
 
     await waitFor(() => {
       expect(screen.getByTitle('Start Conversation')).toBeInTheDocument();
@@ -141,7 +141,7 @@ describe('InvincibleVoice Core Functionality Tests', () => {
       getVideoTracks: () => [],
     });
 
-    render(<InvincibleVoice />);
+    render(<Voice />);
 
     await waitFor(() => {
       expect(screen.getByTitle('Start Conversation')).toBeInTheDocument();
@@ -168,19 +168,19 @@ describe('InvincibleVoice Core Functionality Tests', () => {
       askMicrophoneAccess: jest.fn().mockResolvedValue(null),
     });
 
-    render(<InvincibleVoice />);
+    render(<Voice />);
 
     await waitFor(() => {
       expect(
         screen.getByText(
-          'Please allow microphone access to use InvincibleVoice.',
+          'Please allow microphone access to use Voice.',
         ),
       ).toBeInTheDocument();
     });
   });
 
   test('Response options are displayed with waiting state', async () => {
-    render(<InvincibleVoice />);
+    render(<Voice />);
 
     await waitFor(() => {
       expect(screen.getByTitle('Start Conversation')).toBeInTheDocument();

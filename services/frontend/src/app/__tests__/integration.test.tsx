@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import InvincibleVoice from '../../components/InvincibleVoice';
+import Voice from '../../components/Voice';
 
 // Create a comprehensive integration test that demonstrates all key behaviors
 
@@ -55,7 +55,7 @@ jest.mock('../useBackendServerUrl', () => ({
   useBackendServerUrl: () => 'http://localhost:8000',
 }));
 
-describe('InvincibleVoice Integration Tests', () => {
+describe('Voice Integration Tests', () => {
   beforeEach(() => {
     // Mock fetch for health check and TTS
     global.fetch = jest.fn().mockImplementation((url) => {
@@ -90,7 +90,7 @@ describe('InvincibleVoice Integration Tests', () => {
     const user = userEvent.setup();
 
     // STEP 1: Initial render
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     // Wait for health check and initial load
     await waitFor(() => {
@@ -133,7 +133,7 @@ describe('InvincibleVoice Integration Tests', () => {
 
   test('Connect button behavior - microphone activation and WebSocket connection', async () => {
     const user = userEvent.setup();
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     await waitFor(() => {
       expect(screen.getByTitle('Start Conversation')).toBeInTheDocument();
@@ -168,20 +168,20 @@ describe('InvincibleVoice Integration Tests', () => {
       askMicrophoneAccess: jest.fn().mockResolvedValue(null),
     });
 
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     // ✅ Test: Error message is shown when microphone is refused
     await waitFor(() => {
       expect(
         screen.getByText(
-          'Please allow microphone access to use InvincibleVoice.',
+          'Please allow microphone access to use Voice.',
         ),
       ).toBeInTheDocument();
     });
   });
 
   test('Response boxes display waiting state initially', async () => {
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     // Wait for component to load and health check to complete
     await waitFor(() => {
@@ -196,7 +196,7 @@ describe('InvincibleVoice Integration Tests', () => {
   });
 
   test('Demonstrates that WebSocket message handling would work', async () => {
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     // Wait for component to load and health check to complete
     await waitFor(() => {

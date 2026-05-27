@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import InvincibleVoice from '../../components/InvincibleVoice';
+import Voice from '../../components/Voice';
 
 // Mock the custom hooks
 jest.mock('../useMicrophoneAccess');
@@ -126,7 +126,7 @@ describe('Delete Conversation Tests', () => {
   });
 
   it('should display delete buttons for each conversation', async () => {
-    render(<InvincibleVoice userId='test-user-id' />);
+    render(<Voice userId='test-user-id' />);
 
     // Wait for user data to load
     await waitFor(() => {
@@ -145,7 +145,7 @@ describe('Delete Conversation Tests', () => {
 
   it('should show confirmation dialog when delete button is clicked', async () => {
     const user = userEvent.setup();
-    render(<InvincibleVoice userId='test-user-id' />);
+    render(<Voice userId='test-user-id' />);
 
     // Wait for user data to load
     await waitFor(() => {
@@ -176,7 +176,7 @@ describe('Delete Conversation Tests', () => {
 
   it('should cancel deletion when cancel button is clicked', async () => {
     const user = userEvent.setup();
-    render(<InvincibleVoice userId='test-user-id' />);
+    render(<Voice userId='test-user-id' />);
 
     // Wait for user data to load
     await waitFor(() => {
@@ -211,7 +211,7 @@ describe('Delete Conversation Tests', () => {
 
   it('should delete conversation when confirmed', async () => {
     const user = userEvent.setup();
-    render(<InvincibleVoice userId='test-user-id' />);
+    render(<Voice userId='test-user-id' />);
 
     // Wait for user data to load
     await waitFor(() => {
@@ -256,7 +256,7 @@ describe('Delete Conversation Tests', () => {
       status: 500,
     });
 
-    render(<InvincibleVoice userId='test-user-id' />);
+    render(<Voice userId='test-user-id' />);
 
     // Wait for user data to load
     await waitFor(() => {
@@ -297,7 +297,7 @@ describe('Delete Conversation Tests', () => {
 
   it('should close dialog when clicking the X button', async () => {
     const user = userEvent.setup();
-    render(<InvincibleVoice userId='test-user-id' />);
+    render(<Voice userId='test-user-id' />);
 
     // Wait for user data to load
     await waitFor(() => {

@@ -1,7 +1,7 @@
 import { beforeEach, describe, jest } from '@jest/globals';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import InvincibleVoice from '../../components/InvincibleVoice';
+import Voice from '../../components/Voice';
 
 // Mock the custom hooks
 jest.mock('../useMicrophoneAccess');
@@ -21,7 +21,7 @@ jest.mock('../useBackendServerUrl', () => ({
   useBackendServerUrl: () => 'http://localhost:8000',
 }));
 
-describe('InvincibleVoice Connect Button Tests', () => {
+describe('Voice Connect Button Tests', () => {
   const mockSendMessage = jest.fn();
   const mockLastMessage = null;
   const mockReadyState = 1; // OPEN
@@ -73,7 +73,7 @@ describe('InvincibleVoice Connect Button Tests', () => {
       audioProcessor: { current: null },
     });
 
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     // Wait for the component to render and health check to complete
     await waitFor(() => {
@@ -111,7 +111,7 @@ describe('InvincibleVoice Connect Button Tests', () => {
       askMicrophoneAccess: mockAskMicrophoneAccess,
     });
 
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     await waitFor(() => {
       expect(screen.getByTitle('Start Conversation')).toBeInTheDocument();
@@ -124,7 +124,7 @@ describe('InvincibleVoice Connect Button Tests', () => {
     await waitFor(() => {
       expect(
         screen.getByText(
-          'Please allow microphone access to use InvincibleVoice.',
+          'Please allow microphone access to use Voice.',
         ),
       ).toBeInTheDocument();
     });
@@ -166,7 +166,7 @@ describe('InvincibleVoice Connect Button Tests', () => {
       readyState: 1, // OPEN
     });
 
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     // First connect
     await waitFor(() => {

@@ -1,6 +1,6 @@
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import InvincibleVoice from '../../components/InvincibleVoice';
+import Voice from '../../components/Voice';
 
 // Mock WebSocket
 let mockLastMessage: any = null;
@@ -39,7 +39,7 @@ jest.mock('../useBackendServerUrl', () => ({
   useBackendServerUrl: () => 'http://localhost:8000',
 }));
 
-describe('InvincibleVoice Transcription Message Handling Tests', () => {
+describe('Voice Transcription Message Handling Tests', () => {
   const setMockMessage = (message: any) => {
     mockLastMessage = message;
     const useWebSocket = require('react-use-websocket').default;
@@ -76,7 +76,7 @@ describe('InvincibleVoice Transcription Message Handling Tests', () => {
   test('transcription delta messages update the current speaker message bubble', async () => {
     // Initial render
     const { rerender } = render(
-      <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+      <Voice userId='12345678-1234-4234-8234-123456789012' />,
     );
 
     await waitFor(() => {
@@ -93,7 +93,7 @@ describe('InvincibleVoice Transcription Message Handling Tests', () => {
         }),
       });
       rerender(
-        <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+        <Voice userId='12345678-1234-4234-8234-123456789012' />,
       );
     });
 
@@ -115,7 +115,7 @@ describe('InvincibleVoice Transcription Message Handling Tests', () => {
         }),
       });
       rerender(
-        <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+        <Voice userId='12345678-1234-4234-8234-123456789012' />,
       );
     });
 
@@ -130,7 +130,7 @@ describe('InvincibleVoice Transcription Message Handling Tests', () => {
 
   test('multiple transcription delta messages update the same text bubble progressively', async () => {
     const { rerender } = render(
-      <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+      <Voice userId='12345678-1234-4234-8234-123456789012' />,
     );
 
     await waitFor(() => {
@@ -159,7 +159,7 @@ describe('InvincibleVoice Transcription Message Handling Tests', () => {
           }),
         });
         rerender(
-          <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+          <Voice userId='12345678-1234-4234-8234-123456789012' />,
         );
       });
 
@@ -205,7 +205,7 @@ describe('InvincibleVoice Transcription Message Handling Tests', () => {
     });
 
     const { rerender } = render(
-      <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+      <Voice userId='12345678-1234-4234-8234-123456789012' />,
     );
 
     await waitFor(() => {
@@ -234,7 +234,7 @@ describe('InvincibleVoice Transcription Message Handling Tests', () => {
         }),
       });
       rerender(
-        <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+        <Voice userId='12345678-1234-4234-8234-123456789012' />,
       );
     });
 
@@ -257,7 +257,7 @@ describe('InvincibleVoice Transcription Message Handling Tests', () => {
         }),
       });
       rerender(
-        <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+        <Voice userId='12345678-1234-4234-8234-123456789012' />,
       );
     });
 
@@ -281,7 +281,7 @@ describe('InvincibleVoice Transcription Message Handling Tests', () => {
 
   test('duplicate messages with same event_id are not processed twice', async () => {
     const { rerender } = render(
-      <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+      <Voice userId='12345678-1234-4234-8234-123456789012' />,
     );
 
     await waitFor(() => {
@@ -301,7 +301,7 @@ describe('InvincibleVoice Transcription Message Handling Tests', () => {
     await act(async () => {
       setMockMessage(duplicateMessage);
       rerender(
-        <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+        <Voice userId='12345678-1234-4234-8234-123456789012' />,
       );
     });
 
@@ -316,7 +316,7 @@ describe('InvincibleVoice Transcription Message Handling Tests', () => {
     await act(async () => {
       setMockMessage(duplicateMessage);
       rerender(
-        <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+        <Voice userId='12345678-1234-4234-8234-123456789012' />,
       );
     });
 

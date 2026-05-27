@@ -1,15 +1,15 @@
 /**
  * Unit tests for the context-toggle + sendCurrentContexts logic
- * extracted from InvincibleVoice.
+ * extracted from Voice.
  *
  * These tests exercise the pure callback behaviour without mounting
- * the full InvincibleVoice tree (which requires heavy mocking).
+ * the full Voice tree (which requires heavy mocking).
  */
 
 import type { Context } from '@/types/user';
 
 // ---------------------------------------------------------------------------
-// Pure helpers mirroring the InvincibleVoice callback logic
+// Pure helpers mirroring the Voice callback logic
 // ---------------------------------------------------------------------------
 
 function makeSendCurrentContexts(

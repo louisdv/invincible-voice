@@ -1,7 +1,7 @@
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import InvincibleVoice from '../../components/InvincibleVoice';
+import Voice from '../../components/Voice';
 
 // Mock WebSocket
 let mockLastMessage: any = null;
@@ -128,7 +128,7 @@ describe('Response Handling and TTS Tests', () => {
     setupConnectionMocks();
 
     const { rerender } = render(
-      <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+      <Voice userId='12345678-1234-4234-8234-123456789012' />,
     );
 
     await establishConnection(user);
@@ -152,7 +152,7 @@ describe('Response Handling and TTS Tests', () => {
           }),
         });
         rerender(
-          <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+          <Voice userId='12345678-1234-4234-8234-123456789012' />,
         );
       });
     }
@@ -170,7 +170,7 @@ describe('Response Handling and TTS Tests', () => {
   });
 
   test('response interface is simplified when not connected', async () => {
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     await waitFor(() => {
       expect(screen.getByTitle('Start Conversation')).toBeInTheDocument();
@@ -194,7 +194,7 @@ describe('Response Handling and TTS Tests', () => {
     setupConnectionMocks();
 
     const { rerender } = render(
-      <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+      <Voice userId='12345678-1234-4234-8234-123456789012' />,
     );
 
     await establishConnection(user);
@@ -214,7 +214,7 @@ describe('Response Handling and TTS Tests', () => {
         }),
       });
       rerender(
-        <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+        <Voice userId='12345678-1234-4234-8234-123456789012' />,
       );
     });
 
@@ -279,7 +279,7 @@ describe('Response Handling and TTS Tests', () => {
     setupConnectionMocks();
 
     const { rerender } = render(
-      <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+      <Voice userId='12345678-1234-4234-8234-123456789012' />,
     );
 
     await establishConnection(user);
@@ -302,7 +302,7 @@ describe('Response Handling and TTS Tests', () => {
           }),
         });
         rerender(
-          <InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />,
+          <Voice userId='12345678-1234-4234-8234-123456789012' />,
         );
       });
     }
@@ -335,7 +335,7 @@ describe('Response Handling and TTS Tests', () => {
   });
 
   test('response boxes are hidden when not connected', async () => {
-    render(<InvincibleVoice userId='12345678-1234-4234-8234-123456789012' />);
+    render(<Voice userId='12345678-1234-4234-8234-123456789012' />);
 
     await waitFor(() => {
       expect(screen.getByTitle('Start Conversation')).toBeInTheDocument();
