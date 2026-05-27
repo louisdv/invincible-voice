@@ -7,12 +7,18 @@ import ContextProvider from '@/components/ContextProvider';
 export const metadata: Metadata = {
   title: 'Voice',
   description: 'Help people with SLA.',
+  appleWebApp: {
+    capable: true,
+    title: 'Voice',
+    statusBarStyle: 'default',
+  },
 };
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
+  themeColor: '#FFFFFF',
 };
 
 const satoshi = localFont({
