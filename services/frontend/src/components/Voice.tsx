@@ -1193,15 +1193,13 @@ const Voice = () => {
           />
         )}
         {isSettingsOpen && userData && (
-          <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50'>
-            <div className='w-full h-full max-w-md max-h-full p-4 overflow-y-auto border bg-voice-surface border-voice-border rounded-3xl'>
-              <MobileSettingsPopup
-                userSettings={userData.user_settings}
-                email={userData.email}
-                onSave={handleSettingsSave}
-                onCancel={handleSettingsCancel}
-              />
-            </div>
+          <div className='fixed inset-0 z-50 bg-voice-surface'>
+            <MobileSettingsPopup
+              userSettings={userData.user_settings}
+              email={userData.email}
+              onSave={handleSettingsSave}
+              onCancel={handleSettingsCancel}
+            />
           </div>
         )}
         <ConfirmationDialog

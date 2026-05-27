@@ -116,7 +116,7 @@ const VoiceScreen: FC<Props> = ({ settings, onBack, onSave }) => {
         <button
           type='button'
           onClick={() => setShowUpload((s) => !s)}
-          className='self-start px-1 text-[15px] text-voice-accent font-medium'
+          className='w-full py-3 rounded-2xl bg-voice-surface text-voice-text font-medium text-[15px]'
         >
           {t('settings.cloneYourVoice')}
         </button>

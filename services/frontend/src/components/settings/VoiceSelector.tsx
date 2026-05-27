@@ -41,7 +41,7 @@ const VoiceSelector: FC<VoiceSelectorProps> = ({
     : 'px-3 py-2 text-white bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-red-500 hover:bg-[#2B2B2B] hover:border-[#FF6459]';
 
   return (
-    <div className='flex gap-2'>
+    <div className='flex flex-col sm:flex-row gap-2'>
       <select
         value={selectedVoice || ''}
         onChange={(e) => onVoiceChange(e.target.value)}
