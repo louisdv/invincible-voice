@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from typing_extensions import Annotated
 
-from backend.kyutai_constants import ALLOW_PASSWORD
+from backend.voice_constants import ALLOW_PASSWORD
 from backend.security import create_access_token, hash_password, verify_password
 from backend.storage import (
     UserData,

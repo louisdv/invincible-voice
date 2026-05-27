@@ -19,7 +19,7 @@ from backend.exceptions import (
     WebSocketClosedError,
     make_ora_error,
 )
-from backend.kyutai_constants import SAMPLE_RATE
+from backend.voice_constants import SAMPLE_RATE
 from backend.libs.health import get_health
 from backend.unmute_handler import UnmuteHandler
 

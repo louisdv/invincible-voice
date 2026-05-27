@@ -6,7 +6,7 @@ import humanize
 import pydantic
 from cloudpathlib import AnyPath
 
-from backend import kyutai_constants
+from backend import voice_constants
 from backend import openai_realtime_api_events as ora
 from backend.llm.system_prompt import BASE_SYSTEM_PROMPT, DEFAULT_CONTEXTS_FR
 from backend.typing import Context, Conversation, LLMMessage, SpeakerMessage, UserSettings
@@ -124,7 +124,7 @@ def _add_to_llm_ready_conversation(
 
 
 def get_user_data_path(email: str) -> AnyPath:
-    return kyutai_constants.USERS_SETTINGS_AND_HISTORY_DIR / f"{email}.json"
+    return voice_constants.USERS_SETTINGS_AND_HISTORY_DIR / f"{email}.json"
 
 
 class UserDataNotFoundError(Exception):

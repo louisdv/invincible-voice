@@ -127,11 +127,11 @@ def test_chatbot_preprocessed_messages_passes_current_contexts():
 
 def test_seed_default_contexts_on_load_when_empty(tmp_path, monkeypatch):
     """get_user_data_from_storage should seed DEFAULT_CONTEXTS_FR if contexts is empty."""
-    from backend import kyutai_constants
+    from backend import voice_constants
     from backend.storage import get_user_data_from_storage
 
     monkeypatch.setattr(
-        kyutai_constants, "USERS_SETTINGS_AND_HISTORY_DIR", tmp_path
+        voice_constants, "USERS_SETTINGS_AND_HISTORY_DIR", tmp_path
     )
 
     legacy = UserData(
@@ -163,11 +163,11 @@ def test_seed_default_contexts_on_load_when_empty(tmp_path, monkeypatch):
 
 
 def test_seed_skipped_if_contexts_already_populated(tmp_path, monkeypatch):
-    from backend import kyutai_constants
+    from backend import voice_constants
     from backend.storage import get_user_data_from_storage
 
     monkeypatch.setattr(
-        kyutai_constants, "USERS_SETTINGS_AND_HISTORY_DIR", tmp_path
+        voice_constants, "USERS_SETTINGS_AND_HISTORY_DIR", tmp_path
     )
 
     existing_ctx_id = uuid.uuid4()

@@ -8,7 +8,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPBearer
 from starlette.responses import Response
 
-from backend.kyutai_constants import (
+from backend.voice_constants import (
     KYUTAI_API_KEY,
     REDIS_HOST,
     REDIS_PASSWORD,

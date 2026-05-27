@@ -6,7 +6,7 @@ from typing import Annotated
 import gradium
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 
-from backend.kyutai_constants import TTS_IS_GRADIUM, TTS_VOICE_ID
+from backend.voice_constants import TTS_IS_GRADIUM, TTS_VOICE_ID
 from backend.routes.user import get_current_user
 from backend.storage import UserData
 

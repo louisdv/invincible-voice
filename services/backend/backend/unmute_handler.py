@@ -18,7 +18,7 @@ from pydantic import BaseModel
 
 import backend.openai_realtime_api_events as ora
 from backend import metrics as mt
-from backend.kyutai_constants import (
+from backend.voice_constants import (
     SAMPLE_RATE,
 )
 from backend.llm.chatbot import Chatbot

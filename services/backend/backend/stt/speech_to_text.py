@@ -15,7 +15,7 @@ from pydantic import BaseModel, TypeAdapter
 
 from backend import metrics as mt
 from backend.exceptions import MissingServiceAtCapacity
-from backend.kyutai_constants import (
+from backend.voice_constants import (
     FRAME_TIME_SEC,
     KYUTAI_STT_URL,
     SAMPLE_RATE,

@@ -3,7 +3,7 @@ from typing import AsyncIterator
 
 import pydantic
 
-from backend import kyutai_constants
+from backend import voice_constants
 from backend.llm.providers import chat_completion_stream
 
 logger = logging.getLogger(__name__)
@@ -18,8 +18,8 @@ class VLLMStream:
     """Streams structured LLM completions through the LiteLLM wrapper."""
 
     def __init__(self, temperature: float = 1.0):
-        self.model = kyutai_constants.LLM_MODEL
-        self.fallback_model = kyutai_constants.LLM_MODEL_FALLBACK
+        self.model = voice_constants.LLM_MODEL
+        self.fallback_model = voice_constants.LLM_MODEL_FALLBACK
         self.temperature = temperature
 
     async def chat_completion(
@@ -40,7 +40,7 @@ class VLLMStream:
             temperature=self.temperature,
             response_format=response_format,
             fallback_model=self.fallback_model,
-            api_key=kyutai_constants.LLM_API_KEY,
-            api_base=kyutai_constants.LLM_URL,
+            api_key=voice_constants.LLM_API_KEY,
+            api_base=voice_constants.LLM_URL,
         ):
             yield chunk

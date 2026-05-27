@@ -12,7 +12,7 @@ from starlette.requests import Request
 
 import backend.openai_realtime_api_events as ora
 from backend import metrics as mt
-from backend.kyutai_constants import (
+from backend.voice_constants import (
     MAX_VOICE_FILE_SIZE_MB,
     REDIS_HOST,
     REDIS_PASSWORD,
