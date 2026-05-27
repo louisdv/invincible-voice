@@ -1124,6 +1124,7 @@ const Voice = () => {
               onSettingsPress={handleSettingsOpen}
               onHistoryPress={() => setIsShowingHistoryFromIdle(true)}
               hasHistory={(userData?.conversations ?? []).length > 0}
+              userName={userData?.user_settings?.name ?? ''}
             />
           )}
         {(shouldConnect ||

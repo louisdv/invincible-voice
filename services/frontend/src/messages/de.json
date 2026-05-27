@@ -76,6 +76,7 @@
     "moreSettingsAvailable": "Weitere Einstellungen sind in der Desktop- oder Tablet-Version von Voice verfügbar"
   },
   "conversation": {
+    "greeting": "Hallo {name}.",
     "yesterday": "Gestern",
     "startChatting": "Chatten beginnen",
     "newChat": "Neuer Chat",
