@@ -440,23 +440,23 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
   return (
     <div className='flex flex-col w-full h-full gap-y-2'>
       <div className='flex flex-row justify-between w-full'>
-        <h2 className='text-base font-medium text-white'>Paramètres</h2>
+        <h2 className='text-base font-medium text-voice-text'>Paramètres</h2>
 
         <div className='flex flex-row items-center gap-2 -mr-5 -mt-2'>
           <button
-            className='text-[#FF6459] underline text-xs'
+            className='text-voice-danger underline text-xs'
             onClick={signOut}
           >
             {t('settings.signOut')}
           </button>
 
           <button
-            className='size-10 cursor-pointer flex items-center justify-center rounded-2xl bg-[#101010]'
+            className='size-10 cursor-pointer flex items-center justify-center rounded-2xl bg-voice-surface'
             onClick={onCancel}
           >
             <X
               size={24}
-              className='text-white'
+              className='text-voice-text'
             />
           </button>
         </div>
@@ -469,7 +469,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
             <div className='flex flex-col grow gap-2'>
               <label
                 htmlFor='settings-name-input'
-                className='text-sm font-medium text-white'
+                className='text-sm font-medium text-voice-text'
               >
                 {t('settings.yourName')}
               </label>
@@ -479,7 +479,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                 type='text'
                 value={formData.name}
                 onChange={onChangeName}
-                className='w-full px-6 py-2 text-base text-white bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green'
+                className='w-full px-6 py-2 text-base text-voice-text bg-voice-surface border border-voice-border rounded-2xl focus:outline-none focus:border-voice-accent'
                 placeholder={t('settings.yourNamePlaceholder')}
               />
             </div>
@@ -488,7 +488,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
           <div className='flex flex-col gap-2'>
             <label
               htmlFor='settings-voice-select'
-              className='text-sm font-medium text-white'
+              className='text-sm font-medium text-voice-text'
             >
               {t('common.voice')}
             </label>
@@ -499,7 +499,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                 value={formData.voice || ''}
                 onChange={handleVoiceChange}
                 disabled={isLoadingVoices}
-                className='flex-1 px-6 py-2 text-base text-white bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green disabled:opacity-50'
+                className='flex-1 px-6 py-2 text-base text-voice-text bg-voice-surface border border-voice-border rounded-2xl focus:outline-none focus:border-voice-accent disabled:opacity-50'
               >
                 <option value=''>{t('common.default')}</option>
 
@@ -523,7 +523,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                 type='button'
                 onClick={handleTestVoice}
                 disabled={!formData.voice || isPlayingVoice}
-                className='px-4 py-2 text-sm text-white bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green hover:bg-[#2B2B2B] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 whitespace-nowrap'
+                className='px-4 py-2 text-sm text-voice-text bg-voice-surface border border-voice-border rounded-2xl focus:outline-none focus:border-voice-accent hover:bg-voice-elevated disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 whitespace-nowrap'
               >
                 {isPlayingVoice ? (
                   <LoaderCircleIcon
@@ -545,12 +545,12 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                       setVoiceToDelete(formData.voice || null);
                       setShowDeleteVoiceConfirm(true);
                     }}
-                    className='px-3 py-2 text-white bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-red-500 hover:bg-[#2B2B2B] hover:border-[#FF6459]'
+                    className='px-3 py-2 text-voice-text bg-voice-surface border border-voice-border rounded-2xl focus:outline-none focus:border-voice-danger hover:bg-voice-elevated hover:border-voice-danger'
                     title={t('common.delete')}
                   >
                     <XCircle
                       size={16}
-                      className='text-[#FF6459]'
+                      className='text-voice-danger'
                     />
                   </button>
                 )}
@@ -560,19 +560,19 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
               <button
                 type='button'
                 onClick={() => setShowVoiceUpload(true)}
-                className='mt-2 px-4 py-2 text-sm text-white bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green hover:bg-[#2B2B2B]'
+                className='mt-2 px-4 py-2 text-sm text-voice-text bg-voice-surface border border-voice-border rounded-2xl focus:outline-none focus:border-voice-accent hover:bg-voice-elevated'
               >
                 {t('settings.cloneYourVoice')}
               </button>
             )}
 
             {showVoiceUpload && (
-              <div className='mt-2 px-4 py-3 bg-[#181818] border border-white rounded-2xl'>
+              <div className='mt-2 px-4 py-3 bg-voice-elevated border border-voice-border rounded-2xl'>
                 <div className='flex flex-col gap-3'>
                   <div className='flex flex-col gap-1'>
                     <label
                       htmlFor='voice-upload-name-input'
-                      className='text-xs font-medium text-gray-300'
+                      className='text-xs font-medium text-voice-text-secondary'
                     >
                       {t('settings.voiceName')}
                     </label>
@@ -582,7 +582,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                       type='text'
                       value={voiceUploadName}
                       onChange={(e) => setVoiceUploadName(e.target.value)}
-                      className='w-full px-3 py-2 text-sm text-white bg-[#1B1B1B] border border-white rounded-xl focus:outline-none focus:border-green'
+                      className='w-full px-3 py-2 text-sm text-voice-text bg-voice-surface border border-voice-border rounded-xl focus:outline-none focus:border-voice-accent'
                       placeholder={t('settings.voiceNamePlaceholder')}
                     />
                   </div>
@@ -590,7 +590,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                   <div className='flex flex-col gap-1'>
                     <label
                       htmlFor='voice-upload-file-input'
-                      className='text-xs font-medium text-gray-300'
+                      className='text-xs font-medium text-voice-text-secondary'
                     >
                       {t('settings.audioFile')}
                     </label>
@@ -600,12 +600,12 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                       type='file'
                       accept='.mp3,.wav'
                       onChange={handleVoiceFileChange}
-                      className='w-full px-3 py-2 text-sm text-white bg-[#1B1B1B] border border-white rounded-xl focus:outline-none focus:border-green file:mr-4 file:py-1 file:px-4 file:rounded-lg file:border-0 file:bg-[#39F2AE] file:text-black file:text-sm file:cursor-pointer'
+                      className='w-full px-3 py-2 text-sm text-voice-text bg-voice-surface border border-voice-border rounded-xl focus:outline-none focus:border-voice-accent file:mr-4 file:py-1 file:px-4 file:rounded-lg file:border-0 file:bg-voice-accent file:text-white file:text-sm file:cursor-pointer'
                     />
                   </div>
 
                   {voiceUploadError && (
-                    <p className='text-xs text-red-400'>{voiceUploadError}</p>
+                    <p className='text-xs text-voice-danger'>{voiceUploadError}</p>
                   )}
 
                   <div className='flex gap-2'>
@@ -617,7 +617,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                         setVoiceUploadName('');
                         setVoiceUploadError(null);
                       }}
-                      className='flex-1 px-4 py-2 text-sm text-white bg-[#1B1B1B] border border-white rounded-xl focus:outline-none focus:border-green hover:bg-[#2B2B2B]'
+                      className='flex-1 px-4 py-2 text-sm text-voice-text bg-voice-surface border border-voice-border rounded-xl focus:outline-none focus:border-voice-accent hover:bg-voice-elevated'
                     >
                       {t('common.cancel')}
                     </button>
@@ -630,7 +630,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                         !voiceUploadFile ||
                         !voiceUploadName.trim()
                       }
-                      className='flex-1 px-4 py-2 text-sm text-white bg-[#39F2AE] rounded-xl focus:outline-none hover:bg-[#2EDB9B] disabled:opacity-50 disabled:cursor-not-allowed'
+                      className='flex-1 px-4 py-2 text-sm text-white bg-voice-accent rounded-xl focus:outline-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
                     >
                       {isCreatingVoice ? (
                         <LoaderCircleIcon
@@ -650,7 +650,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
           <div className='flex flex-col gap-2'>
             <label
               htmlFor='settings-language-select'
-              className='text-sm font-medium text-white'
+              className='text-sm font-medium text-voice-text'
             >
               {t('settings.expectedTranscriptionLanguage')}
             </label>
@@ -659,7 +659,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
               id='settings-language-select'
               value={formData.expected_transcription_language || ''}
               onChange={handleLanguageChange}
-              className='w-full px-6 py-2 text-base text-white bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green'
+              className='w-full px-6 py-2 text-base text-voice-text bg-voice-surface border border-voice-border rounded-2xl focus:outline-none focus:border-voice-accent'
             >
               <option value=''>{t('settings.letSpeechToTextGuess')}</option>
               <option value='en'>English</option>
@@ -672,11 +672,11 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
 
           <div className='flex flex-col flex-1 gap-2'>
             <div className='flex items-center justify-between mb-1'>
-              <div className='text-sm font-medium text-white'>
+              <div className='text-sm font-medium text-voice-text'>
                 {t('settings.configureAssistant')}
               </div>
 
-              <span className='text-sm text-gray-400'>
+              <span className='text-sm text-voice-text-tertiary'>
                 {formatTokenCount(promptTokenCount)}
               </span>
             </div>
@@ -684,7 +684,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
             <textarea
               value={formData.prompt}
               onChange={onChangePrompt}
-              className='flex-1 w-full min-h-0 px-6 py-4 text-base text-white bg-[#1B1B1B] border border-white rounded-3xl resize-none focus:outline-none focus:border-green scrollbar-hidden scrollable'
+              className='flex-1 w-full min-h-0 px-6 py-4 text-base text-voice-text bg-voice-surface border border-voice-border rounded-3xl resize-none focus:outline-none focus:border-voice-accent scrollbar-hidden scrollable'
               placeholder={t('settings.promptPlaceholder')}
             />
           </div>
@@ -692,8 +692,8 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
 
         <div className='flex flex-col h-full gap-2'>
           <div className='flex flex-col grow h-full gap-2'>
-            <div className='w-full px-6 py-4 bg-[#101010] rounded-[40px]'>
-              <div className='block mb-1 text-sm font-medium text-white'>
+            <div className='w-full px-6 py-4 bg-voice-surface rounded-[40px]'>
+              <div className='block mb-1 text-sm font-medium text-voice-text'>
                 {t('settings.additionalKeywords')}
               </div>
               <div className='flex flex-col w-full gap-0.5'>
@@ -706,7 +706,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                     />
                   ))}
                   {formData.additional_keywords.length === 0 && (
-                    <p className='text-sm italic text-gray-500'>
+                    <p className='text-sm italic text-voice-text-tertiary'>
                       {t('settings.noKeywordsAdded')}
                     </p>
                   )}
@@ -717,18 +717,14 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                     value={newKeywordInput}
                     onChange={onChangeNewKeywordInput}
                     onKeyDown={handleKeywordInputKeyPress}
-                    className='flex-1 px-4 py-1 text-sm text-white bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green h-10'
+                    className='flex-1 px-4 py-1 text-sm text-voice-text bg-voice-elevated border border-voice-border rounded-2xl focus:outline-none focus:border-voice-accent h-10'
                     placeholder={t('settings.addKeywordPlaceholder')}
                   />
                   <button
                     onClick={handleAddKeyword}
-                    className='absolute shrink-0 h-8 p-px right-1 inset-y-1 w-fit green-to-purple-via-blue-gradient rounded-xl'
-                    style={{
-                      filter:
-                        'drop-shadow(0rem 0.2rem 0.15rem var(--darkgray))',
-                    }}
+                    className='absolute shrink-0 h-8 right-1 inset-y-1 w-fit bg-voice-accent rounded-xl'
                   >
-                    <div className='h-full w-full pl-4 pr-3 flex flex-row bg-[#181818] items-center justify-center gap-1 rounded-xl text-sm'>
+                    <div className='h-full w-full pl-4 pr-3 flex flex-row items-center justify-center gap-1 rounded-xl text-sm text-white'>
                       {t('common.add')}
                       <Plus
                         width={24}
@@ -740,8 +736,8 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                 </div>
               </div>
             </div>
-            <div className='w-full px-6 py-4 bg-[#101010] rounded-[40px]'>
-              <div className='block mb-1 text-sm font-medium text-white'>
+            <div className='w-full px-6 py-4 bg-voice-surface rounded-[40px]'>
+              <div className='block mb-1 text-sm font-medium text-voice-text'>
                 {t('settings.contexts')}
               </div>
               <div className='flex flex-col w-full gap-0.5'>
@@ -749,27 +745,27 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                   {formData.contexts.map((ctx) => (
                     <div
                       key={ctx.id}
-                      className='inline-flex items-center gap-1 h-8 px-3 bg-[#1B1B1B] border border-gray-600 rounded-2xl text-sm text-white'
+                      className='inline-flex items-center gap-1 h-8 px-3 bg-voice-elevated border border-voice-border rounded-2xl text-sm text-voice-text'
                     >
                       <span>{ctx.label}</span>
                       <button
                         type='button'
                         onClick={() => handleRemoveContext(ctx.id)}
                         aria-label={`Remove ${ctx.label}`}
-                        className='text-gray-400 hover:text-red-400'
+                        className='text-voice-text-tertiary hover:text-voice-danger'
                       >
                         <X size={14} />
                       </button>
                     </div>
                   ))}
                   {formData.contexts.length === 0 && (
-                    <p className='text-sm italic text-gray-500'>
+                    <p className='text-sm italic text-voice-text-tertiary'>
                       {t('settings.noContextsAdded')}
                     </p>
                   )}
                 </div>
                 {contextInputError && (
-                  <p className='text-xs text-red-400'>{contextInputError}</p>
+                  <p className='text-xs text-voice-danger'>{contextInputError}</p>
                 )}
                 <div className='relative flex gap-2'>
                   <input
@@ -781,19 +777,15 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                     }}
                     onKeyDown={handleContextInputKeyPress}
                     maxLength={100}
-                    className='flex-1 px-4 py-1 text-sm text-white bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green h-10'
+                    className='flex-1 px-4 py-1 text-sm text-voice-text bg-voice-elevated border border-voice-border rounded-2xl focus:outline-none focus:border-voice-accent h-10'
                     placeholder={t('settings.addContextPlaceholder')}
                   />
                   <button
                     type='button'
                     onClick={handleAddContext}
-                    className='absolute shrink-0 h-8 p-px right-1 inset-y-1 w-fit green-to-purple-via-blue-gradient rounded-xl'
-                    style={{
-                      filter:
-                        'drop-shadow(0rem 0.2rem 0.15rem var(--darkgray))',
-                    }}
+                    className='absolute shrink-0 h-8 right-1 inset-y-1 w-fit bg-voice-accent rounded-xl'
                   >
-                    <div className='h-full w-full pl-4 pr-3 flex flex-row bg-[#181818] items-center justify-center gap-1 rounded-xl text-sm'>
+                    <div className='h-full w-full pl-4 pr-3 flex flex-row items-center justify-center gap-1 rounded-xl text-sm text-white'>
                       {t('common.add')}
                       <Plus
                         width={24}
@@ -805,8 +797,8 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                 </div>
               </div>
             </div>
-            <div className='w-full px-6 py-4 bg-[#101010] rounded-[40px]'>
-              <div className='block mb-1 text-sm font-medium text-white'>
+            <div className='w-full px-6 py-4 bg-voice-surface rounded-[40px]'>
+              <div className='block mb-1 text-sm font-medium text-voice-text'>
                 {t('common.friends')}
               </div>
               <div className='flex flex-col w-full gap-0.5'>
@@ -819,7 +811,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                     />
                   ))}
                   {formData.friends.length === 0 && (
-                    <p className='text-sm italic text-gray-500'>
+                    <p className='text-sm italic text-voice-text-tertiary'>
                       {t('settings.noFriendsAdded')}
                     </p>
                   )}
@@ -830,18 +822,14 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                     value={newFriendInput}
                     onChange={onChangeNewFriendInput}
                     onKeyDown={handleFriendInputKeyPress}
-                    className='flex-1 px-4 py-1 text-sm text-white bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green h-10'
+                    className='flex-1 px-4 py-1 text-sm text-voice-text bg-voice-elevated border border-voice-border rounded-2xl focus:outline-none focus:border-voice-accent h-10'
                     placeholder={t('settings.addFriendPlaceholder')}
                   />
                   <button
                     onClick={handleAddFriend}
-                    className='absolute shrink-0 h-8 p-px right-1 inset-y-1 w-fit green-to-purple-via-blue-gradient rounded-xl'
-                    style={{
-                      filter:
-                        'drop-shadow(0rem 0.2rem 0.15rem var(--darkgray))',
-                    }}
+                    className='absolute shrink-0 h-8 right-1 inset-y-1 w-fit bg-voice-accent rounded-xl'
                   >
-                    <div className='h-full w-full pl-4 pr-3 flex flex-row bg-[#181818] items-center justify-center gap-1 rounded-xl text-sm'>
+                    <div className='h-full w-full pl-4 pr-3 flex flex-row items-center justify-center gap-1 rounded-xl text-sm text-white'>
                       {t('common.add')}
                       <Plus
                         width={24}
@@ -853,19 +841,16 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                 </div>
               </div>
             </div>
-            <div className='w-full px-6 py-4 bg-[#101010] rounded-[40px]'>
+            <div className='w-full px-6 py-4 bg-voice-surface rounded-[40px]'>
               <div className='flex flex-row items-center justify-between w-full mb-2'>
-                <div className='block mb-1 text-sm font-medium text-white'>
+                <div className='block mb-1 text-sm font-medium text-voice-text'>
                   {t('common.documents')}
                 </div>
                 <button
                   onClick={handleAddDocument}
-                  className='shrink-0 p-px w-fit green-to-purple-via-blue-gradient rounded-xl h-8 -mt-0.5 mr-1'
-                  style={{
-                    filter: 'drop-shadow(0rem 0.2rem 0.15rem var(--darkgray))',
-                  }}
+                  className='shrink-0 w-fit bg-voice-accent rounded-xl h-8 -mt-0.5 mr-1'
                 >
-                  <div className='h-full w-full pl-4 pr-3 flex flex-row bg-[#181818] items-center justify-center gap-1 rounded-xl text-sm'>
+                  <div className='h-full w-full pl-4 pr-3 flex flex-row items-center justify-center gap-1 rounded-xl text-sm text-white'>
                     {t('settings.addDocument')}
                     <Plus
                       width={24}
@@ -889,7 +874,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                   ))}
 
                   {(!formData.documents || formData.documents.length === 0) && (
-                    <p className='text-sm italic text-gray-500'>
+                    <p className='text-sm italic text-voice-text-tertiary'>
                       {t('settings.noDocumentsAdded')}
                     </p>
                   )}
@@ -902,7 +887,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                 href='https://kyutai.org/privacy-policy'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='text-sm underline text-gray-400 hover:text-white transition-colors'
+                className='text-sm underline text-voice-text-tertiary hover:text-voice-text transition-colors'
               >
                 {t('common.termsOfService')}
               </a>
@@ -910,28 +895,28 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
           </div>
           <div className='flex justify-end gap-x-3'>
             <button
-              className='px-8 text-sm h-14 bg-[#101010] rounded-2xl'
+              className='px-8 text-sm h-14 text-voice-text bg-voice-surface border border-voice-border rounded-2xl hover:bg-voice-elevated'
               onClick={onCancel}
             >
               {t('common.cancel')}
             </button>
 
             <button
-              className='p-px h-14 light-green-to-green-gradient rounded-2xl'
+              className='h-14 bg-voice-accent rounded-2xl hover:opacity-90'
               onClick={handleSave}
             >
-              <div className='flex flex-row bg-[#181818] size-full items-center justify-center gap-4 px-8 rounded-2xl'>
+              <div className='flex flex-row size-full items-center justify-center gap-4 px-8 rounded-2xl text-white'>
                 {t('settings.saveConfiguration')}
                 {!isLoading && (
                   <CheckIcon
                     size={24}
-                    className='text-[#39F2AE]'
+                    className='text-white'
                   />
                 )}
                 {isLoading && (
                   <LoaderCircleIcon
                     size={24}
-                    className='animate-spin text-[#39F2AE]'
+                    className='animate-spin text-white'
                   />
                 )}
               </div>
@@ -949,12 +934,12 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
 
       {showDeleteVoiceConfirm && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70'>
-          <div className='bg-[#1B1B1B] border border-white rounded-2xl p-6 max-w-md w-full mx-4'>
-            <h3 className='text-lg font-medium text-white mb-2'>
+          <div className='bg-voice-surface border border-voice-border rounded-2xl p-6 max-w-md w-full mx-4'>
+            <h3 className='text-lg font-medium text-voice-text mb-2'>
               {t('settings.deleteVoiceTitle')}
             </h3>
 
-            <p className='text-sm text-gray-300 mb-6'>
+            <p className='text-sm text-voice-text-secondary mb-6'>
               {t('settings.deleteVoiceMessage')}
             </p>
             <div className='flex justify-end gap-3'>
@@ -964,7 +949,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
                   setVoiceToDelete(null);
                 }}
                 disabled={isDeletingVoice}
-                className='px-6 py-2 text-sm text-white bg-[#101010] border border-white rounded-2xl focus:outline-none hover:bg-[#2B2B2B] disabled:opacity-50'
+                className='px-6 py-2 text-sm text-voice-text bg-voice-elevated border border-voice-border rounded-2xl focus:outline-none hover:bg-voice-surface disabled:opacity-50'
               >
                 {t('common.cancel')}
               </button>
@@ -972,7 +957,7 @@ const SettingsPopup: FC<SettingsPopupProps> = ({
               <button
                 onClick={handleDeleteVoice}
                 disabled={isDeletingVoice}
-                className='px-6 py-2 text-sm text-white bg-[#FF6459] rounded-2xl focus:outline-none hover:bg-[#E0554E] disabled:opacity-50 flex items-center gap-2'
+                className='px-6 py-2 text-sm text-white bg-voice-danger rounded-2xl focus:outline-none hover:opacity-90 disabled:opacity-50 flex items-center gap-2'
               >
                 {isDeletingVoice ? (
                   <LoaderCircleIcon
@@ -1011,10 +996,10 @@ const AdditionalKeyword: FC<AdditionalKeywordProps> = ({
   return (
     <div className='relative group'>
       <button
-        className='h-10 p-px transition-colors green-to-light-green-gradient rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500'
+        className='h-10 transition-colors bg-voice-accent-soft rounded-2xl focus:outline-none focus:ring-2 focus:ring-voice-accent'
         type='button'
       >
-        <div className='flex flex-col justify-center px-3 h-full text-sm text-white font-medium bg-[#181818] rounded-2xl'>
+        <div className='flex flex-col justify-center px-3 h-full text-sm text-voice-accent font-medium rounded-2xl'>
           {keyword}
         </div>
       </button>
@@ -1022,7 +1007,7 @@ const AdditionalKeyword: FC<AdditionalKeywordProps> = ({
       <button
         type='button'
         onClick={onClickRemove}
-        className='absolute flex items-center justify-center w-4 h-4 text-sm text-white transition-opacity bg-red-500 rounded-full opacity-0 -top-1 -right-1 hover:bg-[#FF6459] group-hover:opacity-100'
+        className='absolute flex items-center justify-center w-4 h-4 text-sm text-white transition-opacity bg-voice-danger rounded-full opacity-0 -top-1 -right-1 hover:opacity-90 group-hover:opacity-100'
         title={t('common.delete')}
       >
         ×
@@ -1047,9 +1032,9 @@ const Friend: FC<FriendProps> = ({ friend, removeFriend }) => {
     <div className='relative group'>
       <button
         type='button'
-        className='h-10 p-px transition-colors blue-to-light-blue-gradient rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+        className='h-10 transition-colors bg-voice-elevated border border-voice-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-voice-accent'
       >
-        <div className='flex flex-col justify-center px-3 h-full text-sm text-white font-medium bg-[#181818] rounded-2xl'>
+        <div className='flex flex-col justify-center px-3 h-full text-sm text-voice-text font-medium rounded-2xl'>
           {friend}
         </div>
       </button>
@@ -1057,7 +1042,7 @@ const Friend: FC<FriendProps> = ({ friend, removeFriend }) => {
       <button
         type='button'
         onClick={onClickRemove}
-        className='absolute flex items-center justify-center w-4 h-4 text-sm text-white transition-opacity bg-red-500 rounded-full opacity-0 -top-1 -right-1 hover:bg-[#FF6459] group-hover:opacity-100'
+        className='absolute flex items-center justify-center w-4 h-4 text-sm text-white transition-opacity bg-voice-danger rounded-full opacity-0 -top-1 -right-1 hover:opacity-90 group-hover:opacity-100'
         title={t('common.delete')}
       >
         ×
@@ -1093,13 +1078,13 @@ const DocumentCard: FC<DocumentProps> = ({
   }, [removeDocument, index]);
 
   return (
-    <div className='flex flex-row items-center gap-x-2 justify-between bg-[#1B1B1B] border border-black rounded-2xl pl-5 pr-2 min-h-14'>
+    <div className='flex flex-row items-center gap-x-2 justify-between bg-voice-elevated border border-voice-border rounded-2xl pl-5 pr-2 min-h-14'>
       <div className='grow flex flex-col gap-0.5'>
-        <span className='block text-base font-medium text-white truncate'>
+        <span className='block text-base font-medium text-voice-text truncate'>
           {document.title}
         </span>
 
-        <span className='text-[10px] text-gray-400'>
+        <span className='text-[10px] text-voice-text-tertiary'>
           {formatTokenCount(docTokenCount)}
         </span>
       </div>
@@ -1107,25 +1092,25 @@ const DocumentCard: FC<DocumentProps> = ({
       <div className='flex gap-2'>
         <button
           aria-label={t('common.edit')}
-          className='size-10 cursor-pointer flex items-center justify-center rounded-xl bg-[#101010]/25'
+          className='size-10 cursor-pointer flex items-center justify-center rounded-xl bg-voice-surface'
           onClick={handleEditDocument}
         >
           <Edit
             width={24}
             height={24}
-            className='text-white'
+            className='text-voice-text'
           />
         </button>
 
         <button
           aria-label={t('common.delete')}
-          className='size-10 cursor-pointer flex items-center justify-center rounded-xl bg-[#101010]/25'
+          className='size-10 cursor-pointer flex items-center justify-center rounded-xl bg-voice-surface'
           onClick={handleRemoveDocument}
         >
           <Trash
             width={24}
             height={24}
-            className='text-[#FF6459]'
+            className='text-voice-danger'
           />
         </button>
       </div>
