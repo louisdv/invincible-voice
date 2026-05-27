@@ -5,7 +5,7 @@ import localFont from 'next/font/local';
 import ContextProvider from '@/components/ContextProvider';
 
 export const metadata: Metadata = {
-  title: 'InvincibleVoice by Kyutai',
+  title: 'Voice',
   description: 'Help people with SLA.',
 };
 

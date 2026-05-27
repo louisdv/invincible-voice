@@ -57,22 +57,6 @@ export const MobileNoConversation: FC<MobileNoConversationProps> = ({
           </button>
         )}
       </div>
-      <div
-        className='absolute bottom-0 right-0 p-6 pointer-events-none'
-        style={{ bottom: 'var(--safe-area-inset-bottom)' }}
-      >
-        <div className='flex flex-col items-end pointer-events-auto'>
-          <p className='w-full text-xs text-gray-500 text-right'>
-            {t('common.textToSpeechProvider')}
-          </p>
-          <img
-            src='/gradium.svg'
-            alt='Gradium'
-            className='h-6 mt-1'
-          />
-        </div>
-      </div>
-
       {/* Safe area spacer for home indicator */}
       <div
         style={{ height: 'var(--safe-area-inset-bottom)' }}
