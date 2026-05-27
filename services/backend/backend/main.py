@@ -86,7 +86,7 @@ app.add_middleware(
 
 @app.get("/")
 def root():
-    return {"message": "You've reached the Unmute backend server."}
+    return {"message": "You've reached the Voice backend server."}
 
 
 @app.get("/v1/health")
