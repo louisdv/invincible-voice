@@ -39,11 +39,6 @@ const baseProps = {
   onSettingsPress: jest.fn(),
   chatHistory: [],
   isConnected: true,
-  conversations: [],
-  selectedConversationIndex: null,
-  onConversationSelect: jest.fn(),
-  onNewConversation: jest.fn(),
-  onDeleteConversation: jest.fn(),
 };
 
 describe('MobileConversationLayout — unified view', () => {

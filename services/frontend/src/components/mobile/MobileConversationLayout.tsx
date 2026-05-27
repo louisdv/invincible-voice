@@ -34,19 +34,9 @@ interface MobileConversationLayoutProps {
   chatHistory: ChatMessage[];
   isConnected: boolean;
   currentSpeakerMessage?: string;
-  // History-list props are still accepted (threaded from Voice.tsx) but the
-  // history TAB has been removed; the list moves to the home screen in 4.2.
-  conversations: Conversation[];
-  selectedConversationIndex: number | null;
-  onConversationSelect: (index: number) => void;
-  onNewConversation: () => void;
-  onDeleteConversation: (index: number) => void;
   pastConversation?: Conversation;
   isViewingPastConversation?: boolean;
-  initialActivePanel?: 'chat' | 'responses' | 'history';
   onBack?: () => void;
-  isHistoryMode?: boolean;
-  additionalKeywords?: string[];
   contexts?: Context[];
   activeContextIds?: Set<string>;
   onContextToggle?: (contextId: string) => void;

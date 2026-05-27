@@ -26,6 +26,7 @@ import ConversationHistory from '@/components/conversations/ConversationHistory'
 import Pause from '@/components/icons/Pause';
 import Reply from '@/components/icons/Reply';
 import MobileConversationLayout from '@/components/mobile/MobileConversationLayout';
+import MobileHistoryScreen from '@/components/mobile/MobileHistoryScreen';
 import { MobileNoConversation } from '@/components/mobile/MobileLayout';
 import MobileSettingsPopup from '@/components/settings/MobileSettingsPopup';
 import SettingsPopup from '@/components/settings/SettingsPopup';
@@ -1110,26 +1111,49 @@ const Voice = () => {
 
   // Mobile layout
   if (isMobile) {
+    // Single mobile view state derived from the existing flags:
+    // - 'past-conversation': read-only view of a selected past conversation
+    // - 'history':           full-screen list of past conversations
+    // - 'conversation':      live unified conversation
+    // - 'home':              start screen
+    let mobileView: 'home' | 'conversation' | 'history' | 'past-conversation';
+    if (isViewingPastConversation) {
+      mobileView = 'past-conversation';
+    } else if (isShowingHistoryFromIdle) {
+      mobileView = 'history';
+    } else if (shouldConnect) {
+      mobileView = 'conversation';
+    } else {
+      mobileView = 'home';
+    }
+
     return (
       <div className='flex flex-col w-full h-screen text-voice-text'>
         <ErrorMessages
           errors={errors}
           setErrors={setErrors}
         />
-        {!shouldConnect &&
-          !isViewingPastConversation &&
-          !isShowingHistoryFromIdle && (
-            <MobileNoConversation
-              onConnectButtonPress={onConnectButtonPress}
-              onSettingsPress={handleSettingsOpen}
-              onHistoryPress={() => setIsShowingHistoryFromIdle(true)}
-              hasHistory={(userData?.conversations ?? []).length > 0}
-              userName={userData?.user_settings?.name ?? ''}
-            />
-          )}
-        {(shouldConnect ||
-          isViewingPastConversation ||
-          isShowingHistoryFromIdle) && (
+        {mobileView === 'home' && (
+          <MobileNoConversation
+            onConnectButtonPress={onConnectButtonPress}
+            onSettingsPress={handleSettingsOpen}
+            onHistoryPress={() => setIsShowingHistoryFromIdle(true)}
+            hasHistory={(userData?.conversations ?? []).length > 0}
+            userName={userData?.user_settings?.name ?? ''}
+          />
+        )}
+        {mobileView === 'history' && (
+          <MobileHistoryScreen
+            conversations={userData?.conversations ?? []}
+            selectedConversationIndex={selectedConversationIndex}
+            onConversationSelect={handleConversationSelect}
+            onNewConversation={handleNewConversation}
+            onDeleteConversation={handleDeleteConversation}
+            onBack={() => setIsShowingHistoryFromIdle(false)}
+          />
+        )}
+        {(mobileView === 'conversation' ||
+          mobileView === 'past-conversation') && (
           <MobileConversationLayout
             textInput={textInput}
             onTextInputChange={handleTextInputChange}
@@ -1145,11 +1169,6 @@ const Voice = () => {
             chatHistory={rawChatHistory}
             isConnected={shouldConnect}
             currentSpeakerMessage={currentSpeakerMessage}
-            conversations={userData?.conversations ?? []}
-            selectedConversationIndex={selectedConversationIndex}
-            onConversationSelect={handleConversationSelect}
-            onNewConversation={handleNewConversation}
-            onDeleteConversation={handleDeleteConversation}
             pastConversation={
               selectedConversationIndex !== null &&
               userData?.conversations[selectedConversationIndex]
@@ -1157,17 +1176,6 @@ const Voice = () => {
                 : undefined
             }
             isViewingPastConversation={isViewingPastConversation}
-            initialActivePanel={
-              isShowingHistoryFromIdle && !isViewingPastConversation
-                ? 'history'
-                : 'chat'
-            }
-            isHistoryMode={
-              isShowingHistoryFromIdle || isViewingPastConversation
-            }
-            additionalKeywords={
-              userData?.user_settings?.additional_keywords ?? []
-            }
             contexts={userData?.user_settings?.contexts ?? []}
             activeContextIds={activeContextIds}
             onContextToggle={handleContextToggle}
@@ -1178,7 +1186,7 @@ const Voice = () => {
                 setSelectedConversationIndex(null);
                 setIsShowingHistoryFromIdle(true);
               } else {
-                // Browsing history list from idle → go back to idle
+                // Live conversation → go back to home
                 setIsShowingHistoryFromIdle(false);
               }
             }}
