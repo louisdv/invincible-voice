@@ -76,7 +76,7 @@ const KeywordsSuggestion: FC<KeywordsSuggestionProps> = ({
           ))}
         </div>
         {isPending && (
-          <div className='mt-2 text-xs text-center text-gray-500'>
+          <div className='mt-2 text-xs text-center text-voice-text-secondary'>
             {t('settings.keywordsLoading')}
           </div>
         )}
@@ -85,8 +85,8 @@ const KeywordsSuggestion: FC<KeywordsSuggestionProps> = ({
   }
 
   return (
-    <div className='w-full px-6 py-4 bg-[#101010] rounded-[40px]'>
-      <div className='mb-1 text-sm font-medium text-white'>
+    <div className='w-full px-6 py-4 bg-voice-elevated border border-voice-border rounded-[40px]'>
+      <div className='mb-1 text-sm font-medium text-voice-text'>
         {t('settings.suggestions')}
       </div>
       <div className='flex flex-wrap gap-1.5 min-h-6 max-h-32 overflow-y-auto overflow-x-hidden py-2 px-0.5'>
@@ -98,7 +98,7 @@ const KeywordsSuggestion: FC<KeywordsSuggestionProps> = ({
           />
         ))}
         {isPending && (
-          <div className='mt-2 text-xs text-center text-gray-500'>
+          <div className='mt-2 text-xs text-center text-voice-text-secondary'>
             {t('settings.keywordsLoading')}
           </div>
         )}
@@ -128,13 +128,13 @@ const MobileKeyword: FC<MobileKeywordProps> = ({
     <button
       onClick={handleClick}
       className={cn(
-        'shrink-0 px-4 py-2 text-sm rounded-full border transition-colors focus:outline-none focus:ring-2 whitespace-nowrap',
+        'shrink-0 px-3 py-1.5 text-[13px] font-medium rounded-full border transition-colors focus:outline-none focus:ring-2 whitespace-nowrap',
         {
-          'bg-amber-700 hover:bg-amber-600 text-white border-amber-500 focus:ring-amber-500 cursor-pointer':
+          'bg-voice-accent hover:opacity-90 text-white border-voice-accent focus:ring-voice-accent cursor-pointer':
             keyword.trim() && isComplete,
-          'bg-gray-600 text-gray-300 border-gray-500 cursor-wait':
+          'bg-voice-surface text-voice-text-secondary border-voice-border cursor-wait':
             keyword.trim() && !isComplete,
-          'bg-gray-600 text-gray-400 border-gray-500 cursor-default':
+          'bg-voice-surface text-voice-text-secondary border-voice-border cursor-default':
             !keyword.trim(),
         },
       )}
@@ -144,11 +144,11 @@ const MobileKeyword: FC<MobileKeywordProps> = ({
         <Fragment>
           {keyword}
           {!isComplete && (
-            <span className='inline-block w-1 h-2 ml-1 bg-gray-400 animate-pulse' />
+            <span className='inline-block w-1 h-2 ml-1 bg-voice-text-secondary animate-pulse' />
           )}
         </Fragment>
       ) : (
-        <span className='text-gray-400'>…</span>
+        <span className='text-voice-text-secondary'>…</span>
       )}
     </button>
   );
@@ -166,12 +166,10 @@ const DesktopKeyword: FC<DesktopKeywordProps> = ({ keyword, onSelect }) => {
 
   return (
     <button
-      className='h-10 p-px transition-colors cursor-pointer min-w-16 purple-to-pink-gradient rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500'
+      className='px-3 py-1.5 text-[13px] font-medium rounded-full transition-colors cursor-pointer min-w-16 bg-voice-accent text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-voice-accent'
       onClick={handleClick}
     >
-      <div className='flex flex-col justify-center px-3 h-full text-sm text-white font-medium bg-[#181818] rounded-2xl'>
-        {keyword || '…'}
-      </div>
+      {keyword || '…'}
     </button>
   );
 };

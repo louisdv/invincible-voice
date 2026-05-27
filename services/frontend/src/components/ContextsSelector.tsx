@@ -16,13 +16,13 @@ const ContextsSelector: FC<ContextsSelectorProps> = ({
   const t = useTranslations();
 
   return (
-    <div className='w-full px-6 py-4 bg-[#101010] rounded-[40px]'>
-      <div className='mb-1 text-sm font-medium text-white'>
+    <div className='w-full px-6 py-4 bg-voice-elevated border border-voice-border rounded-[40px]'>
+      <div className='mb-1 text-sm font-medium text-voice-text'>
         {t('conversation.contexts')}
       </div>
       <div className='flex flex-wrap gap-1.5 min-h-6 max-h-32 overflow-y-auto overflow-x-hidden py-2 px-0.5'>
         {contexts.length === 0 && (
-          <p className='text-xs italic text-gray-500'>
+          <p className='text-xs italic text-voice-text-secondary'>
             {t('conversation.noContextsAdded')}
           </p>
         )}
@@ -34,19 +34,13 @@ const ContextsSelector: FC<ContextsSelectorProps> = ({
               type='button'
               aria-pressed={isActive}
               onClick={() => onToggle(ctx.id)}
-              className={`h-10 p-px transition-colors cursor-pointer rounded-2xl focus:outline-none focus:ring-2 ${
+              className={`px-3 py-1.5 text-[13px] font-medium rounded-full transition-colors cursor-pointer focus:outline-none focus:ring-2 ${
                 isActive
-                  ? 'orange-to-light-orange-gradient focus:ring-orange-500'
-                  : 'border border-gray-600 focus:ring-gray-500'
+                  ? 'bg-voice-accent text-white focus:ring-voice-accent'
+                  : 'bg-voice-surface text-voice-text border border-voice-border focus:ring-voice-border'
               }`}
             >
-              <div
-                className={`flex flex-col justify-center px-3 h-full text-sm text-white font-medium rounded-2xl ${
-                  isActive ? 'bg-[#181818]' : 'bg-[#1B1B1B]'
-                }`}
-              >
-                {ctx.label}
-              </div>
+              {ctx.label}
             </button>
           );
         })}
