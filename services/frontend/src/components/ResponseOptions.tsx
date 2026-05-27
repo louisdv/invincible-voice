@@ -169,7 +169,7 @@ const ResponseOptions: FC<ResponseOptionsProps> = ({
   return (
     <div className='flex flex-col gap-4 pb-12'>
       {displayLoadingPlaceholder && (
-        <div className='mt-2 text-xs text-center text-gray-500'>
+        <div className='mt-2 text-xs text-center text-voice-text-secondary'>
           {t('settings.responsesLoading')} {t('settings.audioWillBeReady')}
         </div>
       )}
@@ -211,8 +211,9 @@ const ResponseOptions: FC<ResponseOptionsProps> = ({
               className={cn(
                 'size-8 font-medium text-sm flex flex-col items-center justify-center rounded-xl transition-all duration-200 border',
                 {
-                  'bg-[#101010] border-white': size === currentResponseSize,
-                  'border-transparent bg-[#1010103D] hover:bg-[#181818] hover:border-black':
+                  'bg-voice-accent text-white border-voice-accent':
+                    size === currentResponseSize,
+                  'bg-voice-surface text-voice-text border border-voice-border hover:bg-voice-elevated':
                     size !== currentResponseSize,
                 },
               )}
@@ -228,10 +229,10 @@ const ResponseOptions: FC<ResponseOptionsProps> = ({
             <button
               onClick={onFreezeToggle}
               className={cn(
-                'h-8 px-6 font-medium text-sm flex gap-3 items-center justify-center rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50',
+                'h-8 px-6 font-medium text-sm flex gap-3 items-center justify-center rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-voice-accent focus:ring-opacity-50',
                 {
-                  'bg-[#101010] border-white': isFrozen,
-                  'border-transparent bg-[#1010103D] hover:bg-[#181818] hover:border-black':
+                  'bg-voice-accent text-white border-voice-accent': isFrozen,
+                  'bg-voice-surface text-voice-text border border-voice-border hover:bg-voice-elevated':
                     !isFrozen,
                 },
               )}
@@ -243,7 +244,7 @@ const ResponseOptions: FC<ResponseOptionsProps> = ({
               {isFrozen ? (
                 <Lock className='w-4 h-4 text-white' />
               ) : (
-                <Unlock className='w-4 h-4 text-white' />
+                <Unlock className='w-4 h-4 text-voice-text' />
               )}
             </button>
           )}
@@ -304,13 +305,13 @@ const EditingResponseOption: FC<EditingResponseOptionProps> = ({
   }, []);
 
   return (
-    <div className='flex flex-col h-16 p-3 border-2 border-green-400 rounded-tr-sm rounded-b-2xl rounded-tl-2xl bg-green-50 dark:bg-green-900/20'>
+    <div className='flex flex-col h-16 p-3 border-2 border-voice-accent rounded-tr-sm rounded-b-2xl rounded-tl-2xl bg-voice-accent-soft'>
       <textarea
         ref={ref}
         value={editingText}
         onChange={onChange}
         onKeyDown={onKeyDown}
-        className='flex-1 text-xs text-gray-900 bg-transparent outline-none resize-none dark:text-gray-100'
+        className='flex-1 text-xs text-voice-text bg-transparent outline-none resize-none'
         placeholder='Type your message…'
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
@@ -360,7 +361,7 @@ const BaseResponseOption: FC<BaseResponseOptionProps> = ({
       data-response-index={index}
       onClick={onClickSelect}
       className={cn(
-        'p-px text-left rounded-tr-sm rounded-b-2xl rounded-tl-2xl transition-all duration-200 h-16 black-to-light-green-via-white-gradient group relative focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50',
+        'text-left rounded-tr-sm rounded-b-2xl rounded-tl-2xl transition-all duration-200 h-16 bg-voice-surface hover:bg-voice-elevated border border-voice-border group relative focus:outline-none focus:ring-2 focus:ring-voice-accent focus:ring-opacity-50',
         {
           'cursor-pointer': responseText.trim() && isComplete,
           'cursor-wait': !responseText.trim() || !isComplete,
@@ -368,22 +369,22 @@ const BaseResponseOption: FC<BaseResponseOptionProps> = ({
       )}
       disabled={!responseText.trim() || !isComplete}
     >
-      <div className='px-3 py-1 overflow-hidden bg-[#101010] group-hover:bg-[#181818] flex flex-row items-center text-base font-bold rounded-tr-sm rounded-b-2xl rounded-tl-2xl size-full gap-4'>
+      <div className='px-3 py-1 overflow-hidden flex flex-row items-center text-base font-bold rounded-tr-sm rounded-b-2xl rounded-tl-2xl size-full gap-4'>
         <div className='flex flex-col items-center gap-1'>
-          <span className='flex flex-col items-center justify-center font-light text-white border border-white rounded-sm size-10 font-base bg-[#101010]'>
+          <span className='flex flex-col items-center justify-center font-light text-voice-text border border-voice-border rounded-sm size-10 font-base bg-voice-elevated'>
             {shortcut}
           </span>
           {responseText.trim() && !isComplete && (
-            <div className='w-4 h-4 border-2 border-green-300 rounded-full border-t-transparent animate-spin' />
+            <div className='w-4 h-4 border-2 border-voice-accent rounded-full border-t-transparent animate-spin' />
           )}
         </div>
         <div className='flex flex-col justify-center grow h-full overflow-y-auto'>
-          <p className='text-xs leading-tight text-white'>
+          <p className='text-xs leading-tight text-voice-text'>
             {responseText.trim() ? (
               <Fragment>
                 {responseText}
                 {!isComplete && (
-                  <span className='inline-block w-1 h-3 ml-1 bg-gray-400 animate-pulse' />
+                  <span className='inline-block w-1 h-3 ml-1 bg-voice-text-tertiary animate-pulse' />
                 )}
               </Fragment>
             ) : (
@@ -398,11 +399,11 @@ const BaseResponseOption: FC<BaseResponseOptionProps> = ({
           <div
             aria-label={`Edit the response. Shortcut is Shift + ${shortcut}`}
             onClick={onClickEdit}
-            className='p-1 transition-colors rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700'
+            className='p-1 transition-colors rounded cursor-pointer hover:bg-voice-surface'
             title={`Edit the response. Shortcut is Shift + ${shortcut}`}
           >
-            <Edit2 className='w-3 h-3 text-gray-600 dark:text-gray-400' />
-            <div className='absolute px-2 py-1 mb-2 text-xs text-white transition-opacity transform -translate-x-1/2 bg-gray-900 rounded opacity-0 pointer-events-none bottom-full left-1/2 whitespace-nowrap group-hover:opacity-100'>
+            <Edit2 className='w-3 h-3 text-voice-text-secondary' />
+            <div className='absolute px-2 py-1 mb-2 text-xs text-white transition-opacity transform -translate-x-1/2 bg-voice-text rounded opacity-0 pointer-events-none bottom-full left-1/2 whitespace-nowrap group-hover:opacity-100'>
               Edit the response. Shortcut is Shift + {shortcut}
             </div>
           </div>

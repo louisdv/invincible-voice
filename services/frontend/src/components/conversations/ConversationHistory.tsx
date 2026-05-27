@@ -1,5 +1,4 @@
 import { MessageSquare, X } from 'lucide-react';
-import Image from 'next/image';
 import { useCallback, useMemo } from 'react';
 import ChatBubble from '@/components/icons/ChatBubble';
 import NewConversation from '@/components/icons/NewConversation';
@@ -117,30 +116,19 @@ const ConversationHistory = ({
   return (
     <div className='relative flex flex-col shrink-0 h-full pt-4 w-80'>
       <div className='flex flex-row items-center justify-center shrink-0 gap-2 pb-2'>
-        <Image
-          src='/logo_invincible.png'
-          alt='Invincible Logo'
-          width={150}
-          height={150}
-          className='-mt-1'
-        />
-        <Image
-          src='/logo_kyutai.svg'
-          alt='Kyutai Logo'
-          width={155}
-          height={64}
-          className='-ml-8'
-        />
+        <h1 className='text-[28px] font-bold tracking-tight text-voice-text leading-none'>
+          Voice
+        </h1>
       </div>
       <div className='flex flex-col flex-1 gap-2 px-6 pt-2 pb-10 overflow-y-auto scrollbar-hidden'>
         {sortedConversations.length === 0 ? (
-          <div className='p-4 text-center text-gray-500'>
+          <div className='p-4 text-center text-voice-text-secondary'>
             <MessageSquare
               size={48}
               className='mx-auto mb-2 opacity-50'
             />
             <p className='text-sm'>{t('conversation.noConversationsYet')}</p>
-            <p className='mt-1 text-xs text-gray-600'>
+            <p className='mt-1 text-xs text-voice-text-tertiary'>
               {t('conversation.startFirstConversation')}
             </p>
           </div>
@@ -162,16 +150,14 @@ const ConversationHistory = ({
       {selectedConversationIndex !== null && (
         <button
           onClick={onNewConversation}
-          className='sticky shrink-0 p-px bottom-6 w-[calc(100%-3rem)] left-6 green-to-purple-via-blue-gradient rounded-2xl h-14 cursor-pointer'
+          className='sticky shrink-0 bottom-6 w-[calc(100%-3rem)] left-6 bg-voice-accent text-white rounded-2xl h-14 cursor-pointer flex flex-row items-center justify-center gap-1 text-sm'
         >
-          <div className='h-full w-full flex flex-row bg-[#181818] items-center justify-center gap-1 rounded-2xl text-sm'>
-            {t('conversation.newChat')}
-            <NewConversation
-              width={24}
-              height={24}
-              className='shrink-0 text-white'
-            />
-          </div>
+          {t('conversation.newChat')}
+          <NewConversation
+            width={24}
+            height={24}
+            className='shrink-0 text-white'
+          />
         </button>
       )}
     </div>
@@ -214,20 +200,21 @@ const ConversationCard = ({
     <div className='relative'>
       <button
         className={cn(
-          'relative shrink-0 w-full h-28 cursor-pointer p-px group',
+          'relative shrink-0 w-full h-28 cursor-pointer group',
           {
-            'white-to-green-gradient rounded-tr-sm rounded-b-2xl rounded-tl-2xl':
+            'bg-voice-accent-soft border border-voice-accent rounded-tr-sm rounded-b-2xl rounded-tl-2xl':
               isSelected,
-            'bg-[#101010] rounded-2xl': !isSelected,
+            'bg-voice-surface hover:bg-voice-elevated border border-voice-border rounded-2xl':
+              !isSelected,
           },
         )}
         onClick={onClickConversationCard}
       >
         <div
           className={cn(
-            'hover:bg-[#181818] bg-[#101010] w-full h-full flex flex-col gap-4 relative rounded-b-2xl rounded-tl-2xl',
+            'w-full h-full flex flex-col gap-4 relative rounded-b-2xl rounded-tl-2xl',
             {
-              'bg-[#181818] rounded-tr-sm': isSelected,
+              'bg-voice-elevated rounded-tr-sm': isSelected,
               'rounded-tr-2xl': !isSelected,
             },
           )}
@@ -237,17 +224,17 @@ const ConversationCard = ({
               <ChatBubble
                 width={24}
                 height={24}
-                className='shrink-0 text-white/55'
+                className='shrink-0 text-voice-text-secondary'
               />
-              <span className='absolute inset-0 text-[10px] flex flex-col items-center justify-center font-semibold pb-0.5'>
+              <span className='absolute inset-0 text-[10px] flex flex-col items-center justify-center font-semibold pb-0.5 text-voice-text'>
                 {getConversationMessageCount(conversation)}
               </span>
             </div>
-            <div className='text-sm text-white/55'>
+            <div className='text-sm text-voice-text-secondary'>
               {formatConversationDate(conversation, t)}
             </div>
           </div>
-          <div className='px-5 text-sm font-medium line-clamp-2'>
+          <div className='px-5 text-sm font-medium line-clamp-2 text-voice-text'>
             {formatConversationPreview(conversation, t)}
           </div>
         </div>
