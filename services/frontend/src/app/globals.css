@@ -14,20 +14,41 @@
   /* for errors */
   --red: #f55142;
 
+  /* Voice white-mode design tokens */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f2f2f7;
+  --bg-elevated: #ffffff;
+  --border-default: #e5e5ea;
+  --text-primary: #1c1c1e;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --accent: #0a84ff;
+  --accent-soft: #f5f7fa;
+  --accent-soft-border: #e5e7eb;
+  --danger: #ff3b30;
+  --success: #34c759;
+
   font-family:
     var(--font-satoshi), system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 500;
   font-size: 16px;
 
-  color-scheme: dark;
-  color: var(--offwhite);
-  background-color: var(--background);
+  /* Voice is white-mode only */
+  color-scheme: light;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 @theme {
@@ -41,6 +62,19 @@
   --color-background: var(--background);
   /* sometimes it's useful to have these as variables too */
   --color-white: #ffffff;
+
+  /* Voice white-mode utility colors */
+  --color-voice-bg: var(--bg-primary);
+  --color-voice-surface: var(--bg-secondary);
+  --color-voice-elevated: var(--bg-elevated);
+  --color-voice-border: var(--border-default);
+  --color-voice-text: var(--text-primary);
+  --color-voice-text-secondary: var(--text-secondary);
+  --color-voice-text-tertiary: var(--text-tertiary);
+  --color-voice-accent: var(--accent);
+  --color-voice-accent-soft: var(--accent-soft);
+  --color-voice-danger: var(--danger);
+  --color-voice-success: var(--success);
 
   --font-family-satoshi: var(--font-satoshi);
 }
