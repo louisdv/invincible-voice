@@ -21,7 +21,7 @@ from backend.exceptions import (
 )
 from backend.voice_constants import SAMPLE_RATE
 from backend.libs.health import get_health
-from backend.unmute_handler import UnmuteHandler
+from backend.voice_handler import VoiceHandler
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -81,7 +81,7 @@ async def report_websocket_exception(websocket: WebSocket, exc: Exception):
             logger.warning("Socket already closed.")
 
 
-async def run_route(websocket: WebSocket, handler: UnmuteHandler):
+async def run_route(websocket: WebSocket, handler: VoiceHandler):
     health = await get_health()
     if not health.ok:
         logger.info("Health check failed, closing WebSocket connection.")
@@ -109,7 +109,7 @@ async def run_route(websocket: WebSocket, handler: UnmuteHandler):
 
 async def receive_loop(
     websocket: WebSocket,
-    handler: UnmuteHandler,
+    handler: VoiceHandler,
     emit_queue: asyncio.Queue[ora.ServerEvent],
 ):
     """Receive messages from the WebSocket.
@@ -207,7 +207,7 @@ class EmitDebugLogger:
 
 async def emit_loop(
     websocket: WebSocket,
-    handler: UnmuteHandler,
+    handler: VoiceHandler,
     emit_queue: asyncio.Queue[ora.ServerEvent],
 ):
     """Send messages to the WebSocket."""

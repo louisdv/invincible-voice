@@ -32,15 +32,15 @@ def _make_user_data() -> UserData:
 @pytest.mark.asyncio
 async def test_current_contexts_event_updates_chatbot_and_regenerates():
     """Sending CurrentContexts must update chatbot.current_contexts and trigger generation."""
-    from backend.unmute_handler import UnmuteHandler
+    from backend.voice_handler import VoiceHandler
 
     user_data = _make_user_data()
-    handler = MagicMock(spec=UnmuteHandler)
+    handler = MagicMock(spec=VoiceHandler)
     handler.chatbot = Chatbot(user_data, dt.datetime(2026, 5, 12, 10, 0))
     handler._generate_response = AsyncMock()
 
     # Bind the real method to the mock
-    handler.set_current_contexts = UnmuteHandler.set_current_contexts.__get__(handler)
+    handler.set_current_contexts = VoiceHandler.set_current_contexts.__get__(handler)
 
     message = ora.CurrentContexts(
         type="current.contexts",
@@ -66,13 +66,13 @@ async def test_current_contexts_event_skips_regen_when_unchanged():
     and a user click before any speaker turn lands the assistant message
     at chat-history position 0, breaking chronological ordering.
     """
-    from backend.unmute_handler import UnmuteHandler
+    from backend.voice_handler import VoiceHandler
 
     user_data = _make_user_data()
-    handler = MagicMock(spec=UnmuteHandler)
+    handler = MagicMock(spec=VoiceHandler)
     handler.chatbot = Chatbot(user_data, dt.datetime(2026, 5, 12, 10, 0))
     handler._generate_response = AsyncMock()
-    handler.set_current_contexts = UnmuteHandler.set_current_contexts.__get__(handler)
+    handler.set_current_contexts = VoiceHandler.set_current_contexts.__get__(handler)
 
     # Chatbot starts with current_contexts == []; sending [] is a no-op
     message = ora.CurrentContexts(type="current.contexts", contexts=[])
@@ -85,14 +85,14 @@ async def test_current_contexts_event_skips_regen_when_unchanged():
 @pytest.mark.asyncio
 async def test_current_contexts_event_triggers_regen_when_cleared():
     """Going from non-empty to empty (user deselected all chips) MUST regen."""
-    from backend.unmute_handler import UnmuteHandler
+    from backend.voice_handler import VoiceHandler
 
     user_data = _make_user_data()
-    handler = MagicMock(spec=UnmuteHandler)
+    handler = MagicMock(spec=VoiceHandler)
     handler.chatbot = Chatbot(user_data, dt.datetime(2026, 5, 12, 10, 0))
     handler.chatbot.current_contexts = ["Au travail"]
     handler._generate_response = AsyncMock()
-    handler.set_current_contexts = UnmuteHandler.set_current_contexts.__get__(handler)
+    handler.set_current_contexts = VoiceHandler.set_current_contexts.__get__(handler)
 
     message = ora.CurrentContexts(type="current.contexts", contexts=[])
     await handler.set_current_contexts(message)

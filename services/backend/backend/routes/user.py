@@ -19,7 +19,7 @@ from backend.security import decode_access_token
 from backend.storage import UserData, get_user_data_from_storage
 from backend.timer import Stopwatch
 from backend.typing import UserSettings
-from backend.unmute_handler import UnmuteHandler
+from backend.voice_handler import VoiceHandler
 
 _stt_lock_manager = RedisLockManager(REDIS_HOST, REDIS_PORT, STT_LOCK_TTL_SECONDS, REDIS_PASSWORD)
 
@@ -151,7 +151,7 @@ async def websocket_route(
             # will not connect.
             await websocket.accept(subprotocol="realtime")
 
-            handler = UnmuteHandler(str(user.email), local_time)
+            handler = VoiceHandler(str(user.email), local_time)
             async with handler:
                 await handler.start_up()
                 await run_route(websocket, handler)

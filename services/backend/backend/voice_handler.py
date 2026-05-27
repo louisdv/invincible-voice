@@ -68,7 +68,7 @@ class GradioUpdate(BaseModel):
     debug_plot_data: list[dict]
 
 
-class UnmuteHandler(AsyncStreamHandler):
+class VoiceHandler(AsyncStreamHandler):
     def __init__(
         self, user_email_or_data: str | UserData, local_time: dt.datetime
     ) -> None:
@@ -386,7 +386,7 @@ class UnmuteHandler(AsyncStreamHandler):
                 return None
 
     def copy(self):
-        return UnmuteHandler(
+        return VoiceHandler(
             self.chatbot.user_data, self.chatbot.user_data.conversations[-1].start_time
         )
 
