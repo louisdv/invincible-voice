@@ -1111,7 +1111,7 @@ const Voice = () => {
   // Mobile layout
   if (isMobile) {
     return (
-      <div className='flex flex-col w-full h-screen text-white'>
+      <div className='flex flex-col w-full h-screen text-voice-text'>
         <ErrorMessages
           errors={errors}
           setErrors={setErrors}
@@ -1185,7 +1185,7 @@ const Voice = () => {
         )}
         {isSettingsOpen && userData && (
           <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50'>
-            <div className='w-full h-full max-w-md max-h-full p-4 overflow-y-auto border bg-[#1B1B1B] border-green rounded-3xl'>
+            <div className='w-full h-full max-w-md max-h-full p-4 overflow-y-auto border bg-voice-surface border-voice-border rounded-3xl'>
               <MobileSettingsPopup
                 userSettings={userData.user_settings}
                 email={userData.email}
@@ -1209,7 +1209,7 @@ const Voice = () => {
   }
 
   return (
-    <div className='relative flex flex-col w-full h-screen overflow-hidden text-white'>
+    <div className='relative flex flex-col w-full h-screen overflow-hidden bg-voice-bg text-voice-text'>
       <ErrorMessages
         errors={errors}
         setErrors={setErrors}
@@ -1233,30 +1233,16 @@ const Voice = () => {
               />
             </div>
           )}
-          {!shouldConnect && !isViewingPastConversation && (
-            <div className='absolute bottom-0 right-0 z-20 p-6 pointer-events-none'>
-              <div className='flex flex-col items-end pointer-events-auto'>
-                <p className='text-xs text-gray-500'>
-                  {t('common.textToSpeechProvider')}
-                </p>
-                <img
-                  src='/gradium.svg'
-                  alt='Gradium'
-                  className='h-6 mt-1'
-                />
-              </div>
-            </div>
-          )}
           {!hidePanes && (
             <div className='relative z-0 flex flex-col h-screen gap-8 px-4 pt-6 pb-4 overflow-y-auto'>
               <div className='flex flex-row items-center justify-end h-10'>
                 {shouldConnect && !isViewingPastConversation && (
                   <button
                     onClick={onConnectButtonPress}
-                    className='shrink-0 h-10 p-px cursor-pointer orange-to-light-orange-gradient rounded-2xl'
+                    className='shrink-0 h-10 p-px cursor-pointer bg-voice-danger rounded-2xl'
                     title={t('conversation.stopConversation')}
                   >
-                    <div className='h-full w-full flex flex-row bg-[#181818] items-center justify-center gap-2 rounded-2xl text-sm px-5'>
+                    <div className='h-full w-full flex flex-row items-center justify-center gap-2 rounded-2xl text-sm px-5 text-white'>
                       {t('conversation.stopConversation')}
                       <Pause
                         width={24}
@@ -1308,8 +1294,8 @@ const Voice = () => {
             )}
             {shouldConnect && !isViewingPastConversation && (
               <Fragment>
-                <div className='w-full px-6 py-4 bg-[#101010] rounded-[40px]'>
-                  <div className='mb-1 text-sm font-medium text-white'>
+                <div className='w-full px-6 py-4 bg-voice-surface border border-voice-border rounded-[40px]'>
+                  <div className='mb-1 text-sm font-medium text-voice-text'>
                     {t('conversation.keywords')}
                   </div>
                   <div className='flex flex-wrap gap-1.5 min-h-6 max-h-32 overflow-y-auto overflow-x-hidden py-2 px-0.5'>
@@ -1317,10 +1303,10 @@ const Voice = () => {
                       (word) => (
                         <button
                           key={word}
-                          className='h-10 p-px transition-colors cursor-pointer green-to-light-green-gradient rounded-2xl focus:outline-none focus:ring-2 focus:ring-green-500'
+                          className='h-10 p-px transition-colors cursor-pointer bg-voice-accent rounded-2xl focus:outline-none focus:ring-2 focus:ring-voice-accent'
                           onClick={() => handleWordBubbleClick(word)}
                         >
-                          <div className='flex flex-col justify-center px-3 h-full text-sm text-white font-medium bg-[#181818] rounded-2xl'>
+                          <div className='flex flex-col justify-center px-3 h-full text-sm text-white font-medium rounded-2xl'>
                             {word}
                           </div>
                         </button>
@@ -1329,14 +1315,14 @@ const Voice = () => {
                     {(!userData?.user_settings?.additional_keywords ||
                       userData.user_settings.additional_keywords.length ===
                         0) && (
-                      <p className='text-xs italic text-gray-500'>
+                      <p className='text-xs italic text-voice-text-tertiary'>
                         No keywords added yet. Add them in settings.
                       </p>
                     )}
                   </div>
                 </div>
                 {userDataError && (
-                  <div className='p-2 border-b border-gray-700'>
+                  <div className='p-2 border-b border-voice-border'>
                     <div className='text-right'>
                       <span className='text-xs text-red-400'>
                         Failed to load user data
@@ -1345,7 +1331,7 @@ const Voice = () => {
                   </div>
                 )}
                 {settingsBlockedMessage && (
-                  <div className='p-2 border-b border-gray-700'>
+                  <div className='p-2 border-b border-voice-border'>
                     <div className='px-2 py-1 text-xs text-yellow-200 border border-yellow-500 rounded bg-yellow-900/20'>
                       {settingsBlockedMessage}
                     </div>
@@ -1356,8 +1342,8 @@ const Voice = () => {
                   activeContextIds={activeContextIds}
                   onToggle={handleContextToggle}
                 />
-                <div className='w-full px-6 py-4 bg-[#101010] rounded-[40px]'>
-                  <div className='mb-1 text-sm font-medium text-white'>
+                <div className='w-full px-6 py-4 bg-voice-surface border border-voice-border rounded-[40px]'>
+                  <div className='mb-1 text-sm font-medium text-voice-text'>
                     {t('common.friends')}
                   </div>
                   <div className='flex flex-wrap gap-1.5 min-h-6 max-h-32 overflow-y-auto overflow-x-hidden py-2 px-0.5'>
@@ -1369,9 +1355,9 @@ const Voice = () => {
                         <button
                           key={friend}
                           onClick={() => handleWordBubbleClick(friend)}
-                          className='h-10 p-px transition-colors cursor-pointer blue-to-light-blue-gradient rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+                          className='h-10 p-px transition-colors cursor-pointer bg-voice-accent rounded-2xl focus:outline-none focus:ring-2 focus:ring-voice-accent'
                         >
-                          <div className='flex flex-col justify-center px-3 h-full text-sm text-white font-medium bg-[#181818] rounded-2xl'>
+                          <div className='flex flex-col justify-center px-3 h-full text-sm text-white font-medium rounded-2xl'>
                             {friend}
                           </div>
                         </button>
@@ -1379,7 +1365,7 @@ const Voice = () => {
                     ))}
                     {(!userData?.user_settings?.friends ||
                       userData.user_settings.friends.length === 0) && (
-                      <p className='text-xs italic text-gray-500'>
+                      <p className='text-xs italic text-voice-text-tertiary'>
                         {t('settings.noFriendsAdded')}
                       </p>
                     )}
@@ -1390,22 +1376,22 @@ const Voice = () => {
                   onSelect={handleKeywordSelect}
                   alwaysShow
                 />
-                <div className='w-full px-6 py-4 bg-[#101010] rounded-[40px] grow flex flex-col gap-2'>
+                <div className='w-full px-6 py-4 bg-voice-surface border border-voice-border rounded-[40px] grow flex flex-col gap-2'>
                   <div className='grid grid-cols-2 gap-2 pb-2'>
                     <button
                       onClick={() =>
                         handleResponseSelection(staticContextOption.id)
                       }
-                      className='w-full h-full p-px text-left transition-all duration-200 rounded-2xl light-orange-to-orange-gradient group focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50'
+                      className='w-full h-full p-px text-left transition-all duration-200 rounded-2xl bg-voice-elevated border border-voice-border group focus:outline-none focus:ring-2 focus:ring-voice-accent focus:ring-opacity-50'
                     >
-                      <div className='px-3 py-4 overflow-hidden bg-[#1B1B1B] group-hover:bg-[#181818] flex flex-row items-center text-base font-bold rounded-2xl size-full gap-4'>
+                      <div className='px-3 py-4 overflow-hidden bg-voice-elevated group-hover:bg-voice-accent-soft flex flex-row items-center text-base font-bold rounded-2xl size-full gap-4'>
                         <div className='flex items-center'>
-                          <span className='flex flex-col items-center justify-center font-light text-white border border-white rounded-sm size-10 font-base bg-[#101010]'>
+                          <span className='flex flex-col items-center justify-center font-light text-voice-text border border-voice-border rounded-sm size-10 font-base bg-voice-surface'>
                             W
                           </span>
                         </div>
                         <div className='flex-1 pr-2'>
-                          <p className='overflow-hidden text-xs leading-tight text-gray-100'>
+                          <p className='overflow-hidden text-xs leading-tight text-voice-text-secondary'>
                             {staticContextOption.text}
                           </p>
                         </div>
@@ -1415,16 +1401,16 @@ const Voice = () => {
                       onClick={() =>
                         handleResponseSelection(staticRepeatOption.id)
                       }
-                      className='w-full h-full p-px text-left transition-all duration-200 rounded-2xl light-orange-to-orange-gradient group focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50'
+                      className='w-full h-full p-px text-left transition-all duration-200 rounded-2xl bg-voice-elevated border border-voice-border group focus:outline-none focus:ring-2 focus:ring-voice-accent focus:ring-opacity-50'
                     >
-                      <div className='px-3 py-4 overflow-hidden bg-[#1B1B1B] group-hover:bg-[#181818] flex flex-row items-center text-base font-bold rounded-2xl size-full gap-4'>
+                      <div className='px-3 py-4 overflow-hidden bg-voice-elevated group-hover:bg-voice-accent-soft flex flex-row items-center text-base font-bold rounded-2xl size-full gap-4'>
                         <div className='flex items-center'>
-                          <span className='flex flex-col items-center justify-center font-light text-white border border-white rounded-sm size-10 font-base bg-[#101010]'>
+                          <span className='flex flex-col items-center justify-center font-light text-voice-text border border-voice-border rounded-sm size-10 font-base bg-voice-surface'>
                             X
                           </span>
                         </div>
                         <div className='flex-1 pr-2'>
-                          <p className='overflow-hidden text-xs leading-tight text-gray-100'>
+                          <p className='overflow-hidden text-xs leading-tight text-voice-text-secondary'>
                             {staticRepeatOption.text}
                           </p>
                         </div>
@@ -1432,7 +1418,7 @@ const Voice = () => {
                     </button>
                   </div>
                   <textarea
-                    className='grow w-full min-h-0 px-6 py-4 text-base text-white bg-[#1B1B1B] border border-white rounded-3xl resize-none focus:outline-none focus:border-green scrollbar-hidden scrollable'
+                    className='grow w-full min-h-0 px-6 py-4 text-base text-voice-text bg-voice-elevated border border-voice-border rounded-3xl resize-none focus:outline-none focus:border-voice-accent scrollbar-hidden scrollable'
                     placeholder={t('conversation.typeMessagePlaceholder')}
                     rows={2}
                     value={textInput}
@@ -1441,10 +1427,10 @@ const Voice = () => {
                   />
                   <button
                     onClick={handleSendMessage}
-                    className='self-end p-px h-14 green-to-purple-via-blue-gradient rounded-2xl w-fit'
+                    className='self-end p-px h-14 bg-voice-accent rounded-2xl w-fit'
                     disabled={!textInput.trim()}
                   >
-                    <div className='flex flex-row bg-[#181818] size-full items-center justify-center gap-4 px-8 rounded-2xl'>
+                    <div className='flex flex-row size-full items-center justify-center gap-4 px-8 rounded-2xl text-white'>
                       {t('conversation.sendMessage')}
                       <Reply
                         width={24}
@@ -1459,7 +1445,7 @@ const Voice = () => {
         </div>
       </div>
       {isDevMode && (
-        <div className='p-4 overflow-auto border-t border-gray-700 max-h-64'>
+        <div className='p-4 overflow-auto border-t border-voice-border max-h-64'>
           <div className='text-xs'>
             <pre
               className='wrap-break-word whitespace-pre-wrap'
@@ -1469,14 +1455,14 @@ const Voice = () => {
               }}
             />
           </div>
-          <div className='mt-2 text-xs text-gray-400'>
+          <div className='mt-2 text-xs text-voice-text-secondary'>
             Dev mode: press D to toggle
           </div>
         </div>
       )}
       {isSettingsOpen && userData && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center px-14 py-8 bg-[#121212CC] backdrop-blur-2xl p-2'>
-          <div className='w-full h-full max-w-7xl max-h-full px-12 pt-6 pb-8 overflow-y-auto border bg-[#121212] border-black rounded-[40px] shadow-custom'>
+        <div className='fixed inset-0 z-50 flex items-center justify-center px-14 py-8 bg-black/30 backdrop-blur-2xl p-2'>
+          <div className='w-full h-full max-w-7xl max-h-full px-12 pt-6 pb-8 overflow-y-auto border bg-voice-bg border-voice-border rounded-[40px] shadow-custom'>
             <SettingsPopup
               userSettings={userData.user_settings}
               email={userData.email}

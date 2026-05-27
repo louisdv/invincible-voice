@@ -28,7 +28,6 @@
     "documents": "Documents",
     "voice": "Voice",
     "name": "Name",
-    "textToSpeechProvider": "Text-to-speech and speech-to-text are generously provided by",
     "back": "Back",
     "termsOfService": "Terms of service",
     "termsOfServiceMessage": "To use Voice, you must first consent to the",

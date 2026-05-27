@@ -28,7 +28,6 @@
     "documents": "Documents",
     "voice": "Voix",
     "name": "Nom",
-    "textToSpeechProvider": "La synthèse vocale et la reconnaissance vocale sont gracieusement fournies par",
     "back": "Retour",
     "termsOfService": "Conditions d'utilisation",
     "termsOfServiceMessage": "Pour utiliser Voice, vous devez d'abord consentir aux",

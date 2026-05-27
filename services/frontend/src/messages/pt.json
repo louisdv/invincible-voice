@@ -28,7 +28,6 @@
     "documents": "Documentos",
     "voice": "Voz",
     "name": "Nome",
-    "textToSpeechProvider": "Conversão de texto em voz e reconhecimento de voz são generosamente fornecidos por",
     "back": "Voltar",
     "termsOfService": "Termos de serviço",
     "termsOfServiceMessage": "Para usar o Voice, você deve primeiro consentir com os",
