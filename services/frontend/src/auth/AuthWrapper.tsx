@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import React, {
   ChangeEvent,
   FC,
@@ -40,7 +39,7 @@ const AuthWrapper: FC<PropsWithChildren> = ({ children = null }) => {
   if (authStatus === AUTH_STATUSES.NOT_CHECKED) {
     return (
       <div className='flex flex-col items-center justify-center w-full'>
-        <h1 className='mb-4 text-xl'>Loading…</h1>
+        <h1 className='mb-4 text-xl text-voice-text'>Loading…</h1>
       </div>
     );
   }
@@ -121,27 +120,13 @@ const SignInScreen: FC<SignInScreenProps> = ({
   return (
     <div className='flex flex-col gap-3 max-w-md w-[90%] my-16'>
       <form
-        className='flex flex-col gap-4 w-full bg-[#101010] px-11 py-9 rounded-4xl'
+        className='flex flex-col gap-4 w-full bg-voice-surface px-11 py-9 rounded-4xl'
         onSubmit={onSubmit}
       >
-        <div className='flex flex-row items-center justify-center shrink gap-2 pb-2 text-xs'>
-          <Image
-            src='/logo_invincible.png'
-            alt='Invincible Logo'
-            width={150}
-            height={150}
-            className='-mt-1'
-          />
-          by
-          <Image
-            src='/logo_kyutai.svg'
-            alt='Kyutai Logo'
-            width={155}
-            height={64}
-            className='-ml-8'
-          />
-        </div>
-        <h1 className='text-center text-xl font-bold mb-9'>
+        <h1 className='text-center text-[40px] font-bold tracking-tight text-voice-text leading-none pb-2'>
+          Voice
+        </h1>
+        <h1 className='text-center text-xl font-bold mb-9 text-voice-text'>
           {t('common.signIn')}
         </h1>
         {allowPassword && (
@@ -149,7 +134,7 @@ const SignInScreen: FC<SignInScreenProps> = ({
             <div className='flex flex-col gap-1'>
               <label
                 htmlFor='auth-email-input'
-                className='block mb-1 text-sm font-medium'
+                className='block mb-1 text-sm font-medium text-voice-text-secondary'
               >
                 {t('common.yourEmail')}
               </label>
@@ -157,14 +142,14 @@ const SignInScreen: FC<SignInScreenProps> = ({
                 id='auth-email-input'
                 type='email'
                 onChange={onChangeEmail}
-                className='w-full px-6 py-3 text-base bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green'
+                className='w-full px-6 py-3 text-base bg-voice-elevated border border-voice-border text-voice-text placeholder:text-voice-text-tertiary rounded-2xl focus:outline-none focus:border-voice-accent'
                 placeholder='prenom.nom@exemple.com'
               />
             </div>
             <div className='flex flex-col gap-1'>
               <label
                 htmlFor='auth-password-input'
-                className='block mb-1 text-sm font-medium'
+                className='block mb-1 text-sm font-medium text-voice-text-secondary'
               >
                 {t('common.yourPassword')}
               </label>
@@ -172,35 +157,31 @@ const SignInScreen: FC<SignInScreenProps> = ({
                 id='auth-password-input'
                 type='password'
                 onChange={onChangePassword}
-                className='w-full px-6 py-3 text-base bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green'
+                className='w-full px-6 py-3 text-base bg-voice-elevated border border-voice-border text-voice-text placeholder:text-voice-text-tertiary rounded-2xl focus:outline-none focus:border-voice-accent'
                 placeholder='*********'
               />
             </div>
-            <p className='block h-4 italic text-xs'>
+            <p className='block h-4 italic text-xs text-voice-danger'>
               {authError ? t('common.emailOrPasswordIncorrect') : ''}
             </p>
             <button
               type='submit'
-              className='shrink-0 p-px mt-4 font-bold cursor-pointer pointer-events-auto green-to-purple-via-blue-gradient rounded-2xl h-14'
+              className='shrink-0 mt-4 cursor-pointer pointer-events-auto bg-voice-accent text-white rounded-2xl h-14 font-bold text-sm px-8 flex items-center justify-center'
             >
-              <div className='h-full w-full flex flex-row bg-[#181818] items-center justify-center gap-2 rounded-2xl text-sm px-8'>
-                {t('common.signIn')}
-              </div>
+              {t('common.signIn')}
             </button>
           </React.Fragment>
         )}
       </form>
-      <div className='flex flex-col gap-2 w-full bg-[#101010] px-11 py-9 rounded-4xl font-bold'>
-        <p className='mb-4 font-bold text-sm text-center'>
+      <div className='flex flex-col gap-2 w-full bg-voice-surface px-11 py-9 rounded-4xl font-bold'>
+        <p className='mb-4 font-bold text-sm text-center text-voice-text'>
           {t('common.noAccount')}
         </p>
         <button
           onClick={onSwitchToRegister}
-          className='shrink-0 p-px cursor-pointer pointer-events-auto rounded-2xl h-14'
+          className='shrink-0 cursor-pointer pointer-events-auto bg-voice-elevated border border-voice-border text-voice-text rounded-2xl h-14 font-bold text-sm px-8 flex items-center justify-center'
         >
-          <span className='h-full w-full flex flex-row bg-[#181818] items-center justify-center gap-2 rounded-2xl text-sm px-8'>
-            {t('common.createAccount')}
-          </span>
+          {t('common.createAccount')}
         </button>
       </div>
     </div>
@@ -270,27 +251,13 @@ const RegisterScreen: FC<RegisterScreenProps> = ({
   return (
     <div className='flex flex-col gap-3 max-w-md w-[90%] my-16'>
       <form
-        className='flex flex-col gap-4 w-full bg-[#101010] px-11 py-9 rounded-4xl'
+        className='flex flex-col gap-4 w-full bg-voice-surface px-11 py-9 rounded-4xl'
         onSubmit={onSubmit}
       >
-        <div className='flex flex-row items-center justify-center shrink-0 gap-2 pb-2 text-xs'>
-          <Image
-            src='/logo_invincible.png'
-            alt='Invincible Logo'
-            width={150}
-            height={150}
-            className='-mt-1'
-          />
-          by
-          <Image
-            src='/logo_kyutai.svg'
-            alt='Kyutai Logo'
-            width={155}
-            height={64}
-            className='-ml-8'
-          />
-        </div>
-        <h1 className='text-center text-xl font-bold mb-9'>
+        <h1 className='text-center text-[40px] font-bold tracking-tight text-voice-text leading-none pb-2'>
+          Voice
+        </h1>
+        <h1 className='text-center text-xl font-bold mb-9 text-voice-text'>
           {t('common.createYourAccount')}
         </h1>
         {allowPassword && (
@@ -298,7 +265,7 @@ const RegisterScreen: FC<RegisterScreenProps> = ({
             <div className='flex flex-col gap-1'>
               <label
                 htmlFor='register-email-input'
-                className='block mb-1 text-sm font-medium'
+                className='block mb-1 text-sm font-medium text-voice-text-secondary'
               >
                 {t('common.yourEmail')}
               </label>
@@ -306,14 +273,14 @@ const RegisterScreen: FC<RegisterScreenProps> = ({
                 id='register-email-input'
                 type='email'
                 onChange={onChangeEmail}
-                className='w-full px-6 py-3 text-base bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green'
+                className='w-full px-6 py-3 text-base bg-voice-elevated border border-voice-border text-voice-text placeholder:text-voice-text-tertiary rounded-2xl focus:outline-none focus:border-voice-accent'
                 placeholder='Email'
               />
             </div>
             <div className='flex flex-col gap-1'>
               <label
                 htmlFor='register-password-input'
-                className='block mb-1 text-sm font-medium'
+                className='block mb-1 text-sm font-medium text-voice-text-secondary'
               >
                 {t('common.createYourPassword')}
               </label>
@@ -321,14 +288,14 @@ const RegisterScreen: FC<RegisterScreenProps> = ({
                 id='register-password-input'
                 type='password'
                 onChange={onChangePassword}
-                className='w-full px-6 py-3 text-base bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green'
+                className='w-full px-6 py-3 text-base bg-voice-elevated border border-voice-border text-voice-text placeholder:text-voice-text-tertiary rounded-2xl focus:outline-none focus:border-voice-accent'
                 placeholder='*********'
               />
             </div>
             <div className='flex flex-col gap-1'>
               <label
                 htmlFor='register-confirm-password-input'
-                className='block mb-1 text-sm font-medium'
+                className='block mb-1 text-sm font-medium text-voice-text-secondary'
               >
                 {t('common.confirmPassword')}
               </label>
@@ -336,33 +303,29 @@ const RegisterScreen: FC<RegisterScreenProps> = ({
                 id='register-confirm-password-input'
                 type='password'
                 onChange={onChangeConfirmPassword}
-                className='w-full px-6 py-3 text-base bg-[#1B1B1B] border border-white rounded-2xl focus:outline-none focus:border-green'
+                className='w-full px-6 py-3 text-base bg-voice-elevated border border-voice-border text-voice-text placeholder:text-voice-text-tertiary rounded-2xl focus:outline-none focus:border-voice-accent'
                 placeholder='*********'
               />
-              <span className='block h-4 italic text-xs'>{error}</span>
+              <span className='block h-4 italic text-xs text-voice-danger'>{error}</span>
             </div>
             <button
               type='submit'
-              className='shrink-0 p-px font-bold cursor-pointer pointer-events-auto green-to-purple-via-blue-gradient rounded-2xl h-14'
+              className='shrink-0 cursor-pointer pointer-events-auto bg-voice-accent text-white rounded-2xl h-14 font-bold text-sm px-8 flex items-center justify-center'
             >
-              <span className='h-full w-full flex flex-row bg-[#181818] items-center justify-center gap-2 rounded-2xl text-sm px-8'>
-                {t('common.signUp')}
-              </span>
+              {t('common.signUp')}
             </button>
           </React.Fragment>
         )}
       </form>
-      <div className='flex flex-col gap-2 w-full bg-[#101010] px-11 py-9 rounded-4xl font-bold'>
-        <p className='mb-4 font-bold text-sm text-center'>
+      <div className='flex flex-col gap-2 w-full bg-voice-surface px-11 py-9 rounded-4xl font-bold'>
+        <p className='mb-4 font-bold text-sm text-center text-voice-text'>
           {t('common.alreadyHaveAccount')}
         </p>
         <button
           onClick={onSwitchToSignIn}
-          className='shrink-0 p-px cursor-pointer pointer-events-auto rounded-2xl h-14'
+          className='shrink-0 cursor-pointer pointer-events-auto bg-voice-elevated border border-voice-border text-voice-text rounded-2xl h-14 font-bold text-sm px-8 flex items-center justify-center'
         >
-          <span className='h-full w-full flex flex-row bg-[#181818] items-center justify-center gap-2 rounded-2xl text-sm px-8'>
-            {t('common.signIn')}
-          </span>
+          {t('common.signIn')}
         </button>
       </div>
     </div>
