@@ -148,24 +148,24 @@ class ConversationItemInputAudioTranscriptionDelta(
     start_time: float  # Unmute extension
 
 
-class UnmuteAdditionalOutputs(BaseEvent[Literal["unmute.additional_outputs"]]):
+class UnmuteAdditionalOutputs(BaseEvent[Literal["voice.additional_outputs"]]):
     args: Any
 
 
 class UnmuteResponseTextDeltaReady(
-    BaseEvent[Literal["unmute.response.text.delta.ready"]]
+    BaseEvent[Literal["voice.response.text.delta.ready"]]
 ):
     delta: str
     response_id: UUID
 
 
 class UnmuteResponseAudioDeltaReady(
-    BaseEvent[Literal["unmute.response.audio.delta.ready"]]
+    BaseEvent[Literal["voice.response.audio.delta.ready"]]
 ):
     number_of_samples: int
 
 
-class UnmuteInterruptedByVAD(BaseEvent[Literal["unmute.interrupted_by_vad"]]):
+class UnmuteInterruptedByVAD(BaseEvent[Literal["voice.interrupted_by_vad"]]):
     """The VAD interrupted the response generation."""
 
 

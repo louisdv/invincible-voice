@@ -158,7 +158,7 @@ const Voice = () => {
         setLastProcessedMessageId(data.event_id);
       }
 
-      if (data.type === 'unmute.additional_outputs') {
+      if (data.type === 'voice.additional_outputs') {
         setDebugDict(data.args.debug_dict);
       } else if (data.type === 'error') {
         if (data.error.type === 'warning') {
@@ -263,9 +263,9 @@ const Voice = () => {
         ![
           'input_audio_buffer.speech_stopped',
           'input_audio_buffer.speech_started',
-          'unmute.interrupted_by_vad',
-          'unmute.response.text.delta.ready',
-          'unmute.response.audio.delta.ready',
+          'voice.interrupted_by_vad',
+          'voice.response.text.delta.ready',
+          'voice.response.audio.delta.ready',
         ].includes(data.type)
       ) {
         console.warn('Received unknown message:', data);
