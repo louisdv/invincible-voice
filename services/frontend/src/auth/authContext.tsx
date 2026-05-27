@@ -117,7 +117,14 @@ const AuthProvider: FC<PropsWithChildren> = ({ children = null }) => {
         });
         if (response.ok) {
           const data = await response.json();
-          new Cookies().set('bearerToken', data.access_token, { path: '/' });
+          new Cookies().set('bearerToken', data.access_token, {
+            path: '/',
+            maxAge: 365 * 24 * 60 * 60, // 1 an en secondes
+            sameSite: 'lax',
+            secure:
+              typeof window !== 'undefined' &&
+              window.location.protocol === 'https:',
+          });
           setAuthStatus(AUTH_STATUSES.LOGGED);
           await fetchUserData();
         } else {
@@ -141,7 +148,14 @@ const AuthProvider: FC<PropsWithChildren> = ({ children = null }) => {
         });
         if (response.ok) {
           const data = await response.json();
-          new Cookies().set('bearerToken', data.access_token, { path: '/' });
+          new Cookies().set('bearerToken', data.access_token, {
+            path: '/',
+            maxAge: 365 * 24 * 60 * 60, // 1 an en secondes
+            sameSite: 'lax',
+            secure:
+              typeof window !== 'undefined' &&
+              window.location.protocol === 'https:',
+          });
           setAuthStatus(AUTH_STATUSES.LOGGED);
           await fetchUserData();
         }
