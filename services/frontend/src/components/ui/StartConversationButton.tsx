@@ -1,32 +1,22 @@
-import NewConversation from '@/components/icons/NewConversation';
+'use client';
 
-interface StartConversationButtonProps {
+import { Play } from 'lucide-react';
+import { FC } from 'react';
+
+interface Props {
   onClick: () => void;
   label: string;
-  className?: string;
 }
 
-const StartConversationButton = ({
-  onClick,
-  label,
-  className = '',
-}: StartConversationButtonProps) => {
-  return (
-    <button
-      onClick={onClick}
-      className={`shrink-0 p-px cursor-pointer pointer-events-auto green-to-purple-via-blue-gradient rounded-2xl h-14 ${className}`}
-      type='button'
-    >
-      <div className='h-full w-full flex flex-row bg-[#181818] items-center justify-center gap-2 rounded-2xl text-sm px-8'>
-        {label}
-        <NewConversation
-          width={24}
-          height={24}
-          className='shrink-0 text-white'
-        />
-      </div>
-    </button>
-  );
-};
+const StartConversationButton: FC<Props> = ({ onClick, label }) => (
+  <button
+    type='button'
+    onClick={onClick}
+    className='flex items-center gap-2 px-8 py-4 rounded-full bg-voice-text text-white text-[17px] font-semibold pointer-events-auto cursor-pointer'
+  >
+    <Play size={18} fill='currentColor' />
+    {label}
+  </button>
+);
 
 export default StartConversationButton;
