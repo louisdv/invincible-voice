@@ -17,6 +17,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "pub_port=80"
+      # Container is on two networks; tell Traefik to reach it via the shared net (where Traefik lives).
+      - "traefik.docker.network=invincible-voice_default"
       - "traefik.http.routers.frontend-staging.rule=Host(`${DOMAIN}`) && PathPrefix(`/`)"
       - "traefik.http.routers.frontend-staging.entrypoints=websecure"
       - "traefik.http.routers.frontend-staging.tls=true"
@@ -65,6 +67,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "pub_port=80"
+      - "traefik.docker.network=invincible-voice_default"
       - "traefik.http.routers.backend-staging.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
       - "traefik.http.routers.backend-staging.middlewares=strip-api-staging"
       - "traefik.http.middlewares.strip-api-staging.replacepathregex.regex=^/api/(.*)"
